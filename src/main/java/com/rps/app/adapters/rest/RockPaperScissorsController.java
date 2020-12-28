@@ -29,6 +29,7 @@ public class RockPaperScissorsController {
       playersService.createPlayer(name);
       return ResponseEntity.created(URI.create("/player/" + name)).build();
     } catch (Exception e) {
+      log.error("Exception createPlayer => {}", e.getMessage());
       return ResponseEntity.badRequest().build();
     }
   }
@@ -38,6 +39,7 @@ public class RockPaperScissorsController {
     try {
       return ResponseEntity.of(playersService.getPlayer(name));
     } catch (Exception e) {
+      log.error("Exception getPlayer => {}", e.getMessage());
       return ResponseEntity.badRequest().build();
     }
   }

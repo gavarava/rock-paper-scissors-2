@@ -2,6 +2,7 @@ package com.rps.app.core.services;
 
 import com.rps.app.core.model.Player;
 import com.rps.app.ports.PlayersRepository;
+import java.time.OffsetDateTime;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +14,11 @@ public class PlayersService {
   private final PlayersRepository playersRepository;
 
   public Player createPlayer(String name) {
-    Player player = Player.builder().name(name).build();
+    Player player = Player
+        .builder()
+        .name(name)
+        .creationDate(OffsetDateTime.now())
+        .build();
     log.info("Created player with name {}", name);
     playersRepository.create(player);
     return player;

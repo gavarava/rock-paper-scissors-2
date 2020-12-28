@@ -3,7 +3,7 @@ services:
   postgres:
     image: postgres:11.2
     volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./createTables.sql:/docker-entrypoint-initdb.d/createTables.sql
       - ./postgresql.conf:/etc/postgresql.conf
     environment:
       POSTGRES_USER: postgres
