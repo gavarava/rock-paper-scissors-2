@@ -1,37 +1,55 @@
-# Data Streamer
-Stream data to a Kafka Queue from a Postgres database which contains over 10M rows.
-#### Build the application
+# Rock Paper Scissors           [![Build Status](https://travis-ci.org/gavarava/rockpaperscissors.svg?branch=master)](https://travis-ci.org/gavarava/rockpaperscissors)  [![SonarCloud Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=gavarava_rockpaperscissors&metric=alert_status)](https://sonarcloud.io/dashboard?id=gavarava_rockpaperscissors)
+A Spring Boot Microservice for the game of Rock Paper Scissors
+###### About the game of Rock Paper Scissors
+* [Rock Paper Scissors - Wikipedia ](https://en.wikipedia.org/wiki/Rock%E2%80%93paper%E2%80%93scissors)
+* [Rock Paper Scissors - A Method for Competitive Game Play Design](http://www.gamasutra.com/view/feature/1733/rock_paper_scissors__a_method_for_.php)
+## Getting Started
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+
+### Building the project
+Project is bundled with the Gradle Wrapper
 ```
-mvn clean package
+./gradlew clean build
 ```
-#### Run using commandline
+
+
+## Running the tests
 ```
-java -jar -Dspring.profiles.active=prod target/datastreamer-0.0.3.jar
+./gradlew clean test
 ```
-#### Build Docker image and Run using docker
+
+## Run the application
+### Using java jar command
 ```
-docker build . -t datastreamer
-docker run --net="host" datastreamer:latest
+java -jar rock-paper-scissors-<version>.jar
 ```
-#### Start environment with multiple docker-compose files
-You can find the documentation and instructions to Run Kafka at [https://docs.confluent.io/current/tutorials/build-your-own-demos.html](https://docs.confluent.io/current/tutorials/build-your-own-demos.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.cp-all-in-one)
-##### Build a Docker Stack using config command
+### Using Docker
+##### Build the Docker image
 ```
-docker-compose -f ./db/docker-compose.yml -f ./kafka/docker-compose.yml -f ./prometheus/docker-compose.yml -f ./grafana/docker-compose.yml config > docker-compose.stack.yml
+docker build -t rockpaperscissors .
 ```
-##### Run Docker Stack
+##### Run Docker container
 ```
-docker-compose -f docker-compose.stack.yml up -d
+docker run -p 8080:8080 -dit rockpaperscissors:latest
 ```
-#### Create a Kafka Topic called order-stats
-```
-kafka-topics --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic order-stats
-```
-#### List Kafka Topics
-```
-kafka-topics --list --zookeeper localhost:2181
-```
-#### Tail Contents of Kafka Topic
-```
-kafka-console-consumer --bootstrap-server localhost:9092 --topic order-stats --from-beginning
-```
+
+## Built With
+* [SpringBoot](http://spring.io/projects/spring-boot) - The web framework used
+* [Maven](https://maven.apache.org/) - Dependency Management
+* [Docker](https://www.docker.com/) - Containerization
+
+## Versioning
+* [Git](https://git-scm.com/)
+
+## Java Coding Style for IDE
+* [Google Style - Intellij](https://github.com/google/styleguide/blob/gh-pages/intellij-java-google-style.xml)
+* [Google Style - Eclipse](https://github.com/google/styleguide/blob/gh-pages/eclipse-java-google-style.xml)
+
+## Authors
+* **Gaurav Edekar** - https://github.com/gavarava
+
+## License
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+
+## Acknowledgments
+* Google
