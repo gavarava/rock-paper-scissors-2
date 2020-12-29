@@ -8,11 +8,13 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.var;
+import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
-@AllArgsConstructor
+@Profile("prod")
 @Slf4j
+@AllArgsConstructor
 public class PostgresPlayersRepository implements PlayersRepository {
 
   private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;

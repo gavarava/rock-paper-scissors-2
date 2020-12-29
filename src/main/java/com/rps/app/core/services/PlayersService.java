@@ -6,8 +6,10 @@ import java.time.OffsetDateTime;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 
 @Slf4j
+@Profile("prod")
 @AllArgsConstructor
 public class PlayersService {
 

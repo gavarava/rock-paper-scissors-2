@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
 @SpringBootTest(classes = App.class)
-@TestPropertySource("classpath:application.yml")
+@TestPropertySource("classpath:application-prod.yml")
 public class DatabasePropertiesIT {
 
   @Autowired
