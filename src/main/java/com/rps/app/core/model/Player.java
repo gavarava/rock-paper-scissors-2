@@ -9,5 +9,6 @@ import lombok.Value;
 public class Player {
 
   OffsetDateTime creationDate;
+  Long gamesPlayed;
   String name;
 }

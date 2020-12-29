@@ -31,4 +31,9 @@ public class PlayersService {
     return Optional.ofNullable(playersRepository.findByName(name));
   }
 
+  public Player updatePlayer(Player player) {
+    log.info("Updating player with name {}", player.getName());
+    playersRepository.update(player);
+    return player;
+  }
 }

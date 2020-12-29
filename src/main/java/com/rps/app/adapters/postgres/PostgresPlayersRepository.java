@@ -24,19 +24,28 @@ public class PostgresPlayersRepository implements PlayersRepository {
     var params = new MapSqlParameterSource()
         .addValue("name", player.getName())
         .addValue("creationdate", player.getCreationDate(), Types.TIMESTAMP_WITH_TIMEZONE);
-    int updatedRows = namedParameterJdbcTemplate.update("INSERT INTO players (name, creationdate) VALUES (:name, :creationdate)", params);
+    namedParameterJdbcTemplate.update("INSERT INTO players (name, creation_date) VALUES (:name, :creationdate)", params);
+  }
+
+  @Override
+  public void update(Player player) {
+    var params = new MapSqlParameterSource()
+        .addValue("name", player.getName())
+        .addValue("gamesPlayed", player.getGamesPlayed());
+    int updatedRows = namedParameterJdbcTemplate
+        .update("UPDATE players  SET name = :name, games_played = :gamesPlayed where name = :name", params);
     log.info("updatedRows = {}", updatedRows);
   }
 
   @Override
   public Player findByName(String playerName) {
     List<Player> players = namedParameterJdbcTemplate
-        .query("SELECT name, creationdate FROM players WHERE name = :name",
+        .query("SELECT name, creation_date FROM players WHERE name = :name",
             new MapSqlParameterSource().addValue("name", playerName),
             (resultSet, i) -> Player
                 .builder()
                 .name(resultSet.getString("name"))
-                .creationDate(resultSet.getObject("creationdate", OffsetDateTime.class))
+                .creationDate(resultSet.getObject("creation_date", OffsetDateTime.class))
                 .build());
     return players.get(0);
   }
