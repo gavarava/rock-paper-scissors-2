@@ -15,9 +15,8 @@ server:
 
 management:
   server:
-    servlet:
-      context-path: "/"
     port: 8091
+    base-path: "/"
 
   endpoints:
     web:

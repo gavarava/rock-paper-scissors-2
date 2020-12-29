@@ -9,13 +9,13 @@ These instructions will get you a copy of the project up and running on your loc
 ### Building the project
 Project is bundled with the Gradle Wrapper
 ```
-./gradlew clean build
+mvn clean install
 ```
 
 
 ## Running the tests
 ```
-./gradlew clean test
+mvn clean verify
 ```
 
 ## Run the application
