@@ -1,0 +1,26 @@
+services:
+  grafana:
+    image: grafana/grafana
+    ports:
+    - published: 3000
+      target: 3000
+  postgres:
+    environment:
+      POSTGRES_PASSWORD: password123
+      POSTGRES_USER: postgres
+    image: postgres:11.2
+    ports:
+    - published: 5432
+      target: 5432
+    volumes:
+    - /Users/gauravedekar/Code/learning/rock-paper-scissors-2/environment/db/createTables.sql:/docker-entrypoint-initdb.d/createTables.sql:rw
+    - /Users/gauravedekar/Code/learning/rock-paper-scissors-2/environment/db/postgresql.conf:/etc/postgresql.conf:rw
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+    - published: 9090
+      target: 9090
+    volumes:
+    - /Users/gauravedekar/Code/learning/rock-paper-scissors-2/environment/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:rw
+version: '3'
+
