@@ -50,7 +50,7 @@ public class RockPaperScissorsController {
     }
   }
 
-  @GetMapping("/{name}")
+  @GetMapping("/player/{name}")
   ResponseEntity<Player> getPlayer(@PathVariable String name) {
     try {
       return ResponseEntity.of(playersService.getPlayer(name));
