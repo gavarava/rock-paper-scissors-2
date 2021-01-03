@@ -1,6 +1,7 @@
 package com.rps.app.adapters.rest;
 
 import com.rps.app.adapters.rest.dto.PlayerDto;
+import com.rps.app.adapters.rest.dto.RockPaperScissorsRequestDto;
 import com.rps.app.core.model.Player;
 import com.rps.app.core.services.PlayersService;
 import java.net.URI;
@@ -39,17 +40,6 @@ public class RockPaperScissorsController {
     }
   }
 
-  @PostMapping(path = "/player")
-  ResponseEntity<Object> updatePlayer(@RequestBody PlayerDto playerDto) {
-    try {
-       playersService.updatePlayer(playerDto.toDomain());
-      return ResponseEntity.ok().build();
-    } catch (Exception e) {
-      log.error("Exception createPlayer => {}", e.getMessage());
-      return ResponseEntity.badRequest().build();
-    }
-  }
-
   @GetMapping("/player/{name}")
   ResponseEntity<Player> getPlayer(@PathVariable String name) {
     try {
@@ -60,4 +50,34 @@ public class RockPaperScissorsController {
     }
   }
 
+  @PostMapping(path = "/player")
+  ResponseEntity<Object> updatePlayer(@RequestBody PlayerDto playerDto) {
+    try {
+      playersService.updatePlayer(playerDto.toDomain());
+      return ResponseEntity.ok().build();
+    } catch (Exception e) {
+      log.error("Exception createPlayer => {}", e.getMessage());
+      return ResponseEntity.badRequest().build();
+    }
+  }
+
+  @PostMapping(path = "/start")
+  ResponseEntity<Object> startSession(@RequestBody RockPaperScissorsRequestDto request) {
+    throw new RuntimeException("NotImplemented");
+  }
+
+  @PostMapping(path = "/join")
+  ResponseEntity<Object> joinSession(@RequestBody RockPaperScissorsRequestDto request) {
+    throw new RuntimeException("NotImplemented");
+  }
+
+  @PostMapping(path = "/play")
+  ResponseEntity<Object> play(@RequestBody RockPaperScissorsRequestDto request) {
+    throw new RuntimeException("NotImplemented");
+  }
+
+  @PostMapping(path = "/result")
+  ResponseEntity<Object> result(@RequestBody RockPaperScissorsRequestDto request) {
+    throw new RuntimeException("NotImplemented");
+  }
 }
