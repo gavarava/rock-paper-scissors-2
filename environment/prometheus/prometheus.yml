@@ -7,4 +7,4 @@ scrape_configs:
     scrape_interval: 5s
     static_configs:
       #- targets: ['127.0.0.1:8091']
-      - targets: ['192.168.10.178:8091']
+      - targets: ['192.168.1.90:8091']

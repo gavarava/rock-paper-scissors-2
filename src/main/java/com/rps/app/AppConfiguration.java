@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
-@Profile("prod")
+@Profile({"prod"})
 @Configuration
 @EnableConfigurationProperties(DatabaseProperties.class)
 class AppConfiguration {
