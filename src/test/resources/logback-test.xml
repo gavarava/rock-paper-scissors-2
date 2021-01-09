@@ -1,0 +1,3 @@
+<configuration>
+  <logger level="ERROR" name="org.springframework.web.client.RestTemplate"/>
+</configuration>
