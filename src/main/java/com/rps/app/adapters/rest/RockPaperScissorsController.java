@@ -62,12 +62,12 @@ public class RockPaperScissorsController {
   }
 
   @PostMapping(path = "/start")
-  ResponseEntity<Object> startSession(@RequestBody RockPaperScissorsRequestDto request) {
+  ResponseEntity<Object> startgame(@RequestBody RockPaperScissorsRequestDto request) {
     throw new RuntimeException("NotImplemented");
   }
 
   @PostMapping(path = "/join")
-  ResponseEntity<Object> joinSession(@RequestBody RockPaperScissorsRequestDto request) {
+  ResponseEntity<Object> joingame(@RequestBody RockPaperScissorsRequestDto request) {
     throw new RuntimeException("NotImplemented");
   }
 

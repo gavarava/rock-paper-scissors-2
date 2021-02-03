@@ -6,6 +6,6 @@ import lombok.Value;
 public class RockPaperScissorsRequestDto {
 
   String playerName;
-  Long sessionId;
+  Long gameId;
   String move;
 }
