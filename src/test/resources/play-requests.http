@@ -7,15 +7,15 @@ POST http://localhost:8080/rockpaperscissors/start HTTP/1.1
 Content-Type: application/json
 
 {
-  "player": "player2"
+  "player": "player1"
 }
 ###
 POST http://localhost:8080/rockpaperscissors/join HTTP/1.1
 Content-Type: application/json
 
 {
-  "game": "123456789L",
-  "player": "player1"
+  "gameId": "123456789",
+  "player": "player2"
 }
 ###
 POST http://localhost:8080/rockpaperscissors/play HTTP/1.1

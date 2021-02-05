@@ -25,7 +25,7 @@ class RockPaperScissorsServiceSpec extends Base {
     try {
       val startResponse = post(create(APP_CONTEXT_ROOT + "start"), "{\"player\": \"" + PLAYER1 + "\"}")
       val joinResponse = post(create(APP_CONTEXT_ROOT + "join"),
-        "{\"gameId\": \"123456789L\",\"player\": \"" + PLAYER2 + "\"")
+        "{\"gameId\": \"123456789\",\"player\": \"" + PLAYER2 + "\"")
     } catch {
       case e: Exception => fail("Test failed due to exception: %s".format(e.getLocalizedMessage))
     }

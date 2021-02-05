@@ -12,7 +12,6 @@ import com.rps.app.core.model.Player;
 import com.rps.app.core.services.PlayersService;
 import com.rps.app.core.services.RockPaperScissorsService;
 import java.net.URI;
-import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.var;
@@ -75,6 +74,7 @@ public class RockPaperScissorsController {
   ResponseEntity<Object> startGame(@RequestBody RockPaperScissorsRequestDto request) {
     try {
       // TODO Handle Not found Exception
+      log.info("request startGame => " + request);
       var playerOptional = playersService.getPlayer(request.getPlayer());
       var startedGame = rockPaperScissorsService.start(playerOptional.get());
       log.info("startedGame => {}", startedGame);
@@ -88,6 +88,7 @@ public class RockPaperScissorsController {
   @PostMapping(path = "/join")
   ResponseEntity<Object> joinGame(@RequestBody RockPaperScissorsRequestDto request) {
     try {
+      log.info("request joinGame => " + request);
       // TODO Handle Not found Exception
       var playerOptional = playersService.getPlayer(request.getPlayer());
       Game joinedGame = rockPaperScissorsService.join(playerOptional.get(), request.getGameId());
