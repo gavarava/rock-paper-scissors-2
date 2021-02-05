@@ -1,6 +1,7 @@
 package com.rps.app.ports;
 
 import com.rps.app.core.model.Game;
+import java.util.Optional;
 
 public interface GameRepository {
 
@@ -8,5 +9,5 @@ public interface GameRepository {
 
   Game update(Game game);
 
-  Game findById(Long gameId);
+  Optional<Game> findById(Long gameId);
 }

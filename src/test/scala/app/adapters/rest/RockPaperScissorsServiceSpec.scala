@@ -1,10 +1,11 @@
 package app.adapters.rest
 
 import java.net.URI._
-
 import app.adapters.rest.APIClient.{get, post, put}
+import lombok.extern.slf4j.Slf4j
 
-class RockPaperScissorsSpec extends Base {
+@Slf4j
+class RockPaperScissorsServiceSpec extends Base {
 
   PLAYER1 + " and " + PLAYER2 should "register " in {
     put(player1Request, null)
@@ -24,7 +25,7 @@ class RockPaperScissorsSpec extends Base {
     try {
       val startResponse = post(create(APP_CONTEXT_ROOT + "start"), "{\"player\": \"" + PLAYER1 + "\"}")
       val joinResponse = post(create(APP_CONTEXT_ROOT + "join"),
-        "{\"session\": \"123456789L\",\"player\": \"" + PLAYER2 + "\"")
+        "{\"gameId\": \"123456789L\",\"player\": \"" + PLAYER2 + "\"")
     } catch {
       case e: Exception => fail("Test failed due to exception: %s".format(e.getLocalizedMessage))
     }
