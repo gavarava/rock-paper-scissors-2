@@ -39,19 +39,16 @@ public class DefaultRockPaperScissorsService implements RockPaperScissorsService
   public Game play(Long gameId, Move move) {
     return gameRepository.findById(gameId).stream()
         .map(game -> {
-          var lastPlayedMoveOptional = game.getLatestMove();
           Set<Move> moves = game.getMoves();
+          var lastPlayedMoveOptional = game.getLatestMove();
           if (lastPlayedMoveOptional.isPresent()) {
-            Move lastPlayedMove = lastPlayedMoveOptional.get();
-            moves.add(lastPlayedMove);
             game = game.toBuilder()
-                .moves(moves)
-                .winner(evaluateWinner(move, lastPlayedMove)).build();
-          } else {
-            game = game.toBuilder()
-                .moves(moves)
-                .build();
+                .winner(evaluateWinner(move, lastPlayedMoveOptional.get())).build();
           }
+          moves.add(move);
+          game = game.toBuilder()
+              .moves(moves)
+              .build();
           return gameRepository.update(game);
         })
         .findFirst()
