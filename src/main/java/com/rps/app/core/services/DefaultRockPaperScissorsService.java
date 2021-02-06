@@ -4,6 +4,7 @@ import static com.rps.app.core.model.Move.Type.PAPER;
 import static com.rps.app.core.model.Move.Type.ROCK;
 import static com.rps.app.core.model.Move.Type.SCISSORS;
 
+import com.google.common.collect.Sets;
 import com.rps.app.core.model.Game;
 import com.rps.app.core.model.Move;
 import com.rps.app.core.model.Player;
@@ -20,7 +21,7 @@ public class DefaultRockPaperScissorsService implements RockPaperScissorsService
 
   @Override
   public Game start(Player player) {
-    return gameRepository.create(Game.builder().players(Set.of(player)).state(State.START).build());
+    return gameRepository.create(Game.builder().players(Sets.newHashSet(player)).state(State.START).build());
   }
 
   @Override
