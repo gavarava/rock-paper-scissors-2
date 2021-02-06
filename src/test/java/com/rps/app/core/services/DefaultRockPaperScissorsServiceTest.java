@@ -37,7 +37,11 @@ class DefaultRockPaperScissorsServiceTest {
   @Test
   void shouldBeAbleToJoinGame_whenInviteExists() {
     var player1 = Player.builder().name("Player1").build();
-    var game = Game.builder().id(GAME_ID).players(Sets.newHashSet(player1)).moves(Sets.newHashSet(new Move(ROCK, player1, now()))).build();
+    var game = Game.builder()
+        .id(GAME_ID)
+        .players(Sets.newHashSet(player1))
+        //.moves(Sets.newHashSet(new Move(ROCK, player1, now())))
+        .build();
     var player2 = Player.builder().name("Player2").build();
     when(gameRepository.findById(GAME_ID)).thenReturn(Optional.of(game));
     when(gameRepository.update(any(Game.class))).thenAnswer(invocation -> invocation.getArgument(0));
@@ -45,7 +49,6 @@ class DefaultRockPaperScissorsServiceTest {
     var result = rockPaperScissorsService.join(player2, GAME_ID);
 
     assertThat(result.getPlayers()).hasSize(2);
-    assertThat(result.getMoves()).hasSize(1);
   }
 
   @Test
