@@ -40,16 +40,16 @@ public class DefaultRockPaperScissorsService implements RockPaperScissorsService
   public Game play(Long gameId, Move move) {
     return gameRepository.findById(gameId).stream()
         .map(game -> {
-          Set<Move> moves = game.getMoves();
-          var lastPlayedMoveOptional = game.getLatestMove();
-          if (lastPlayedMoveOptional.isPresent()) {
+          if (game.getLatestMove().isPresent()) {
             game = game.toBuilder()
-                .winner(evaluateWinner(move, lastPlayedMoveOptional.get())).build();
+                .winner(evaluateWinner(move, game.getLatestMove().get()))
+                .build();
+            game.getMoves().add(move);
+          } else {
+            game = game.toBuilder()
+                .moves(Sets.newHashSet(move))
+                .build();
           }
-          moves.add(move);
-          game = game.toBuilder()
-              .moves(moves)
-              .build();
           return gameRepository.update(game);
         })
         .findFirst()
@@ -62,18 +62,27 @@ public class DefaultRockPaperScissorsService implements RockPaperScissorsService
       case ROCK:
         if (lastPlayedMove.getType() == PAPER) {
           return lastPlayedMove.getPlayer();
+        } else if (lastPlayedMove.getType() == ROCK) {
+          // FIXME TIE as a result
+          return null;
         } else {
           return currentMove.getPlayer();
         }
       case PAPER:
         if (lastPlayedMove.getType() == SCISSORS) {
           return lastPlayedMove.getPlayer();
+        } else if (lastPlayedMove.getType() == PAPER) {
+          // FIXME TIE as a result
+          return null;
         } else {
           return currentMove.getPlayer();
         }
       case SCISSORS:
         if (lastPlayedMove.getType() == ROCK) {
           return lastPlayedMove.getPlayer();
+        } else if (lastPlayedMove.getType() == SCISSORS) {
+          // FIXME TIE as a result
+          return null;
         } else {
           return currentMove.getPlayer();
         }

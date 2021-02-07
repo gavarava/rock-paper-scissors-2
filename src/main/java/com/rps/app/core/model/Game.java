@@ -17,6 +17,9 @@ public class Game {
   Player winner;
 
   public Optional<Move> getLatestMove() {
-    return moves.stream().sorted(Comparator.comparing(Move::getPlayedAt)).findFirst();
+    return moves == null ? Optional.empty()
+        : moves.stream()
+            .sorted(Comparator.comparing(Move::getPlayedAt))
+            .findFirst();
   }
 }

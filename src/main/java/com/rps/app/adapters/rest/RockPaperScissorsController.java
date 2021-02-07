@@ -106,8 +106,8 @@ public class RockPaperScissorsController {
       // TODO Handle Not found Exception
       var playerOptional = playersService.getPlayer(request.getPlayer());
       var move = new Move(Type.of(request.getMove()), playerOptional.get(), now());
-      return ResponseEntity.accepted().body(
-          rockPaperScissorsService.play(request.getGameId(), move));
+      var playedGame = rockPaperScissorsService.play(request.getGameId(), move);
+      return ResponseEntity.ok(GameDto.fromDomain(playedGame));
     } catch (Exception e) {
       log.error("Exception play => {}", e.getMessage());
       return ResponseEntity.badRequest().build();
@@ -118,8 +118,8 @@ public class RockPaperScissorsController {
   ResponseEntity<Object> result(@RequestBody RockPaperScissorsRequestDto request) {
     try {
       // TODO Handle Not found Exception
-      return ResponseEntity.accepted().body(
-          rockPaperScissorsService.result(request.getGameId()));
+      var result = rockPaperScissorsService.result(request.getGameId());
+      return ResponseEntity.ok(GameDto.fromDomain(result));
     } catch (Exception e) {
       log.error("Exception result => {}", e.getMessage());
       return ResponseEntity.badRequest().build();
