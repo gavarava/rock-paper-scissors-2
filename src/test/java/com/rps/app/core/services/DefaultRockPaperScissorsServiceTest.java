@@ -8,6 +8,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import com.google.common.collect.Sets;
+import com.rps.app.adapters.memory.TransientGameRepository;
 import com.rps.app.core.model.Game;
 import com.rps.app.core.model.Move;
 import com.rps.app.core.model.Player;
@@ -19,18 +20,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.testcontainers.shaded.com.google.common.collect.Maps;
 
 class DefaultRockPaperScissorsServiceTest {
 
-  private static final long GAME_ID = 1234567L;
-  @Mock
   private GameRepository gameRepository;
-
   private DefaultRockPaperScissorsService rockPaperScissorsService;
 
   @BeforeEach
   void setup() {
-    MockitoAnnotations.openMocks(this);
+    gameRepository = new TransientGameRepository(Maps.newHashMap());
     rockPaperScissorsService = new DefaultRockPaperScissorsService(gameRepository);
   }
 
@@ -38,15 +37,13 @@ class DefaultRockPaperScissorsServiceTest {
   void shouldBeAbleToJoinGame_whenInviteExists() {
     var player1 = Player.builder().name("Player1").build();
     var game = Game.builder()
-        .id(GAME_ID)
         .players(Sets.newHashSet(player1))
         //.moves(Sets.newHashSet(new Move(ROCK, player1, now())))
         .build();
-    var player2 = Player.builder().name("Player2").build();
-    when(gameRepository.findById(GAME_ID)).thenReturn(Optional.of(game));
-    when(gameRepository.update(any(Game.class))).thenAnswer(invocation -> invocation.getArgument(0));
+    game = gameRepository.create(game);
 
-    var result = rockPaperScissorsService.join(player2, GAME_ID);
+    var player2 = Player.builder().name("Player2").build();
+    var result = rockPaperScissorsService.join(player2, game.getId());
 
     assertThat(result.getPlayers()).hasSize(2);
   }
@@ -54,14 +51,27 @@ class DefaultRockPaperScissorsServiceTest {
   @Test
   void shouldUpdateWinner_whenOnePlayerWins() {
     var player1 = Player.builder().name("Player1").creationDate(OffsetDateTime.now()).build();
-    var game = Game.builder().id(GAME_ID).players(Sets.newHashSet(player1)).moves(Sets.newHashSet(new Move(ROCK, player1, now()))).build();
-    var player2 = Player.builder().name("Player2").creationDate(OffsetDateTime.now()).build();
-    when(gameRepository.findById(GAME_ID)).thenReturn(Optional.of(game));
-    // thenAnswer can be used to return with what came as an argument, so its always latest updated
-    when(gameRepository.update(any(Game.class))).thenAnswer(invocation -> invocation.getArgument(0));
+    var game = Game.builder().players(Sets.newHashSet(player1)).moves(Sets.newHashSet(new Move(ROCK, player1, now()))).build();
+    game = gameRepository.create(game);
 
-    rockPaperScissorsService.join(player2, GAME_ID);
-    var result = rockPaperScissorsService.play(GAME_ID, new Move(PAPER, player2, now()));
+    var player2 = Player.builder().name("Player2").creationDate(OffsetDateTime.now()).build();
+    rockPaperScissorsService.join(player2, game.getId());
+    var result = rockPaperScissorsService.play(game.getId(), new Move(PAPER, player2, now()));
+
+    assertThat(result.getWinner()).isEqualTo(player2);
+  }
+
+  @Test
+  void shouldReturnGameWithWinner_whenCheckingResult() {
+    var player1 = Player.builder().name("Player1").creationDate(OffsetDateTime.now()).build();
+    var game = Game.builder().players(Sets.newHashSet(player1)).moves(Sets.newHashSet(new Move(ROCK, player1, now()))).build();
+    var player2 = Player.builder().name("Player2").creationDate(OffsetDateTime.now()).build();
+    game = gameRepository.create(game);
+
+    rockPaperScissorsService.join(player2, game.getId());
+    rockPaperScissorsService.play(game.getId(), new Move(PAPER, player2, now()));
+
+    var result = rockPaperScissorsService.result(game.getId());
 
     assertThat(result.getWinner()).isEqualTo(player2);
   }

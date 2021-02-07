@@ -18,7 +18,7 @@ public class TransientGameRepository implements GameRepository {
 
   @Override
   public Game create(Game game) {
-    var gameId = 123456789L; //System.currentTimeMillis();
+    var gameId =System.currentTimeMillis();
     game = game.toBuilder().id(gameId).build();
     gameMap.put(gameId, game);
     return gameMap.get(gameId);
