@@ -10,9 +10,7 @@ import com.rps.app.core.model.Move;
 import com.rps.app.core.model.Player;
 import com.rps.app.core.model.State;
 import com.rps.app.ports.GameRepository;
-import java.util.Set;
 import lombok.AllArgsConstructor;
-import lombok.var;
 
 @AllArgsConstructor
 public class DefaultRockPaperScissorsService implements RockPaperScissorsService {
