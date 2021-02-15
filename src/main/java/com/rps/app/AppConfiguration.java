@@ -22,7 +22,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 @Profile({"prod"})
 @Configuration
-@EnableConfigurationProperties(DatabaseProperties.class)
 class AppConfiguration {
 
   @Bean
@@ -51,15 +50,5 @@ class AppConfiguration {
   @Bean
   PlayersService playersService(PlayersRepository playersRepository) {
     return new PlayersService(playersRepository);
-  }
-
-  @Bean
-  public DataSource dataSource() {
-    return DataSourceBuilder.create()
-        .username("postgres")
-        .password("password123")
-        .url("jdbc:postgresql://localhost:5432/postgres")
-        .driverClassName("org.postgresql.Driver")
-        .build();
   }
 }
