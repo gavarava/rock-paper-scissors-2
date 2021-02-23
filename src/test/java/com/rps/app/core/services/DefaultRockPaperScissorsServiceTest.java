@@ -2,27 +2,20 @@ package com.rps.app.core.services;
 
 import static com.rps.app.core.model.Move.Type.PAPER;
 import static com.rps.app.core.model.Move.Type.ROCK;
-import static com.rps.app.core.model.Move.Type.SCISSORS;
 import static com.rps.app.core.model.Move.Type.of;
 import static java.time.OffsetDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 import com.google.common.collect.Sets;
 import com.rps.app.adapters.memory.TransientGameRepository;
 import com.rps.app.core.model.Game;
 import com.rps.app.core.model.Move;
-import com.rps.app.core.model.Move.Type;
 import com.rps.app.core.model.Player;
 import com.rps.app.ports.GameRepository;
 import java.time.OffsetDateTime;
 import java.util.Optional;
-import lombok.var;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.testcontainers.shaded.com.google.common.collect.Maps;
 
 class DefaultRockPaperScissorsServiceTest {
