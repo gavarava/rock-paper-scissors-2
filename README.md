@@ -1,4 +1,4 @@
-# Rock Paper Scissors           [![Build Status](https://travis-ci.org/gavarava/rockpaperscissors.svg?branch=master)](https://travis-ci.org/gavarava/rockpaperscissors)  [![SonarCloud Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=gavarava_rockpaperscissors&metric=alert_status)](https://sonarcloud.io/dashboard?id=gavarava_rockpaperscissors)
+# Rock Paper Scissors           [![Build Status](https://github.com/gavarava//actions/workflows/maven.yml/badge.svg)]
 A Spring Boot Microservice for the game of Rock Paper Scissors
 ###### About the game of Rock Paper Scissors
 * [Rock Paper Scissors - Wikipedia ](https://en.wikipedia.org/wiki/Rock%E2%80%93paper%E2%80%93scissors)
