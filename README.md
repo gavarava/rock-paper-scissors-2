@@ -1,4 +1,4 @@
-# Rock Paper Scissors           [![Build Status](https://github.com/gavarava//actions/workflows/maven.yml/badge.svg)]
+# Rock Paper Scissors           [![Build Status](https://github.com/gavarava/rock-paper-scissors-2/actions/workflows/maven.yml/badge.svg)]
 A Spring Boot Microservice for the game of Rock Paper Scissors
 ###### About the game of Rock Paper Scissors
 * [Rock Paper Scissors - Wikipedia ](https://en.wikipedia.org/wiki/Rock%E2%80%93paper%E2%80%93scissors)
