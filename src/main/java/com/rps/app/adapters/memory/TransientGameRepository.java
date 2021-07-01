@@ -4,6 +4,7 @@ import com.rps.app.core.model.Game;
 import com.rps.app.ports.GameRepository;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
@@ -13,11 +14,11 @@ import org.springframework.context.annotation.Profile;
 @AllArgsConstructor
 public class TransientGameRepository implements GameRepository {
 
-  Map<Long, Game> gameMap;
+  Map<String, Game> gameMap;
 
   @Override
   public Game create(Game game) {
-    var gameId =System.currentTimeMillis();
+    var gameId = UUID.randomUUID().toString();
     game = game.toBuilder().id(gameId).build();
     gameMap.put(gameId, game);
     return gameMap.get(gameId);
@@ -34,7 +35,7 @@ public class TransientGameRepository implements GameRepository {
   }
 
   @Override
-  public Optional<Game> findById(Long gameId) {
+  public Optional<Game> findById(String gameId) {
     return Optional.ofNullable(gameMap.get(gameId));
   }
 }

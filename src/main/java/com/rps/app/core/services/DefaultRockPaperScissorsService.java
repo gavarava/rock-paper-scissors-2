@@ -23,7 +23,7 @@ public class DefaultRockPaperScissorsService implements RockPaperScissorsService
   }
 
   @Override
-  public Game join(Player player, Long gameId) {
+  public Game join(Player player, String gameId) {
     return gameRepository.findById(gameId).stream()
         .map(game -> {
           game.getPlayers().add(player);
@@ -35,7 +35,7 @@ public class DefaultRockPaperScissorsService implements RockPaperScissorsService
   }
 
   @Override
-  public Game play(Long gameId, Move move) {
+  public Game play(String gameId, Move move) {
     return gameRepository.findById(gameId).stream()
         .map(game -> {
           if (game.getLatestMove().isPresent()) {
@@ -91,7 +91,7 @@ public class DefaultRockPaperScissorsService implements RockPaperScissorsService
   }
 
   @Override
-  public Game result(Long gameId) {
+  public Game result(String gameId) {
     // TODO Add Exception Handling
     return gameRepository.findById(gameId).get();
   }

@@ -26,11 +26,11 @@ java -jar rock-paper-scissors-<version>.jar
 ### Using Docker
 ##### Build the Docker image
 ```
-docker build -t rockpaperscissors .
+docker build -t rps2:1.1 .
 ```
 ##### Run Docker container
 ```
-docker run -p 8080:8080 -dit rockpaperscissors:latest
+docker run -p 8080:8080 -dit rps2:1.1
 ```
 
 ## Built With

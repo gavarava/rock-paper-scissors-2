@@ -10,7 +10,7 @@ import lombok.Value;
 @Value
 public class Game {
 
-  Long id;
+  String id;
   State state;
   Set<Player> players;
   Set<Move> moves;
@@ -18,8 +18,6 @@ public class Game {
 
   public Optional<Move> getLatestMove() {
     return moves == null ? Optional.empty()
-        : moves.stream()
-            .sorted(Comparator.comparing(Move::getPlayedAt))
-            .findFirst();
+        : moves.stream().min(Comparator.comparing(Move::getPlayedAt));
   }
 }

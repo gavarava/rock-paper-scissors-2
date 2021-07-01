@@ -9,5 +9,5 @@ public interface GameRepository {
 
   Game update(Game game);
 
-  Optional<Game> findById(Long gameId);
+  Optional<Game> findById(String gameId);
 }

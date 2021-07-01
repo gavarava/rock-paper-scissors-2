@@ -20,7 +20,7 @@ public class RockPaperScissorsRequestDto {
   @JsonProperty("player")
   String player;
   @JsonProperty("gameId")
-  Long gameId;
+  String gameId;
   @JsonProperty("move")
   String move;
 }

@@ -8,9 +8,9 @@ public interface RockPaperScissorsService {
 
   Game start(Player player);
 
-  Game join(Player player, Long game);
+  Game join(Player player, String game);
 
-  Game play(Long game, Move move);
+  Game play(String game, Move move);
 
-  Game result(Long game);
+  Game result(String game);
 }

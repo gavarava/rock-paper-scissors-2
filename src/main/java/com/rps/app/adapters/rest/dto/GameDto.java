@@ -16,7 +16,7 @@ import lombok.Value;
 public class GameDto {
 
   @JsonProperty("gameId")
-  Long id;
+  String id;
   @JsonProperty("winner")
   String winner;
 
