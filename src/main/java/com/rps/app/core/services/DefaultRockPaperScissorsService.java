@@ -5,6 +5,7 @@ import static com.rps.app.core.model.Move.Type.ROCK;
 import static com.rps.app.core.model.Move.Type.SCISSORS;
 
 import com.google.common.collect.Sets;
+import com.rps.app.core.metrics.StartedSessionsCounter;
 import com.rps.app.core.model.Game;
 import com.rps.app.core.model.Move;
 import com.rps.app.core.model.Player;
@@ -16,10 +17,13 @@ import lombok.AllArgsConstructor;
 public class DefaultRockPaperScissorsService implements RockPaperScissorsService {
 
   private final GameRepository gameRepository;
+  private final StartedSessionsCounter startedSessionsCounter;
 
   @Override
   public Game start(Player player) {
-    return gameRepository.create(Game.builder().players(Sets.newHashSet(player)).state(State.START).build());
+    var game = gameRepository.create(Game.builder().players(Sets.newHashSet(player)).state(State.START).build());
+    startedSessionsCounter.increment();
+    return game;
   }
 
   @Override

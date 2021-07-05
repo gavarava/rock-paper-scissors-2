@@ -6,11 +6,14 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.rps.app.adapters.memory.TransientGameRepository;
 import com.rps.app.adapters.postgres.PostgresPlayersRepository;
+import com.rps.app.core.metrics.RegisteredPlayersCounter;
+import com.rps.app.core.metrics.StartedSessionsCounter;
 import com.rps.app.core.services.DefaultRockPaperScissorsService;
 import com.rps.app.core.services.PlayersService;
 import com.rps.app.core.services.RockPaperScissorsService;
 import com.rps.app.ports.GameRepository;
 import com.rps.app.ports.PlayersRepository;
+import io.micrometer.core.instrument.MeterRegistry;
 import java.util.HashMap;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,12 +43,22 @@ class AppConfiguration {
   }
 
   @Bean
-  RockPaperScissorsService rockPaperScissorsService(GameRepository gameRepository) {
-    return new DefaultRockPaperScissorsService(gameRepository);
+  RockPaperScissorsService rockPaperScissorsService(GameRepository gameRepository, StartedSessionsCounter startedSessionsCounter) {
+    return new DefaultRockPaperScissorsService(gameRepository, startedSessionsCounter);
   }
 
   @Bean
-  PlayersService playersService(PlayersRepository playersRepository) {
-    return new PlayersService(playersRepository);
+  PlayersService playersService(PlayersRepository playersRepository, RegisteredPlayersCounter registeredPlayersCounter) {
+    return new PlayersService(playersRepository, registeredPlayersCounter);
+  }
+
+  @Bean
+  RegisteredPlayersCounter registeredPlayersCounter(MeterRegistry meterRegistry) {
+    return new RegisteredPlayersCounter(meterRegistry);
+  }
+
+  @Bean
+  StartedSessionsCounter startedSessionsCounter(MeterRegistry meterRegistry) {
+    return new StartedSessionsCounter(meterRegistry);
   }
 }

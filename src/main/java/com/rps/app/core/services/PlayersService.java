@@ -1,5 +1,6 @@
 package com.rps.app.core.services;
 
+import com.rps.app.core.metrics.RegisteredPlayersCounter;
 import com.rps.app.core.model.Player;
 import com.rps.app.ports.PlayersRepository;
 import java.time.OffsetDateTime;
@@ -14,6 +15,7 @@ import org.springframework.context.annotation.Profile;
 public class PlayersService {
 
   private final PlayersRepository playersRepository;
+  private final RegisteredPlayersCounter registeredPlayersCounter;
 
   public Player createPlayer(String name) {
     Player player = Player
@@ -23,6 +25,7 @@ public class PlayersService {
         .build();
     log.info("Created player with name {}", name);
     playersRepository.create(player);
+    registeredPlayersCounter.increment();
     return player;
   }
 

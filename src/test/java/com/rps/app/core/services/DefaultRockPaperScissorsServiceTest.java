@@ -5,9 +5,12 @@ import static com.rps.app.core.model.Move.Type.ROCK;
 import static com.rps.app.core.model.Move.Type.of;
 import static java.time.OffsetDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
 
 import com.google.common.collect.Sets;
 import com.rps.app.adapters.memory.TransientGameRepository;
+import com.rps.app.core.metrics.StartedSessionsCounter;
 import com.rps.app.core.model.Game;
 import com.rps.app.core.model.Move;
 import com.rps.app.core.model.Player;
@@ -16,17 +19,23 @@ import java.time.OffsetDateTime;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.testcontainers.shaded.com.google.common.collect.Maps;
 
 class DefaultRockPaperScissorsServiceTest {
 
   private GameRepository gameRepository;
+  @Mock
+  private StartedSessionsCounter startedSessionsCounter;
   private DefaultRockPaperScissorsService rockPaperScissorsService;
 
   @BeforeEach
   void setup() {
+    MockitoAnnotations.openMocks(this);
     gameRepository = new TransientGameRepository(Maps.newHashMap());
-    rockPaperScissorsService = new DefaultRockPaperScissorsService(gameRepository);
+    doNothing().when(startedSessionsCounter).increment();
+    rockPaperScissorsService = new DefaultRockPaperScissorsService(gameRepository, startedSessionsCounter);
   }
 
   @Test
@@ -45,10 +54,11 @@ class DefaultRockPaperScissorsServiceTest {
   }
 
   @Test
-  void shouldStartGame() {
+  void shouldStartGameAndIncrementStartedSessionsCounter_whenStartingSession() {
     var player1 = Player.builder().name("Player1").creationDate(OffsetDateTime.now()).build();
     var startedGame = rockPaperScissorsService.start(player1);
     assertThat(startedGame.getPlayers()).hasSize(1);
+    verify(startedSessionsCounter).increment();
   }
 
   @Test
