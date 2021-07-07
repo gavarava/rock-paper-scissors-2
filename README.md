@@ -24,9 +24,10 @@ mvn clean verify
 java -jar rock-paper-scissors-<version>.jar
 ```
 ### Using Docker
-##### Build the Docker image
+##### Build and Push the Docker image
 ```
-docker build -t rps2:1.1 .
+docker build -t edekargaurav88/rps2:1.2 .
+docker push edekargaurav88/rps2:1.2
 ```
 ##### Run Docker container
 ```
