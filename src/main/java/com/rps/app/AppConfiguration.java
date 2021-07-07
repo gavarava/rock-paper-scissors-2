@@ -15,6 +15,7 @@ import com.rps.app.ports.GameRepository;
 import com.rps.app.ports.PlayersRepository;
 import io.micrometer.core.instrument.MeterRegistry;
 import java.util.HashMap;
+import org.springframework.boot.actuate.autoconfigure.metrics.MeterRegistryCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -50,6 +51,11 @@ class AppConfiguration {
   @Bean
   PlayersService playersService(PlayersRepository playersRepository, RegisteredPlayersCounter registeredPlayersCounter) {
     return new PlayersService(playersRepository, registeredPlayersCounter);
+  }
+
+  @Bean
+  MeterRegistryCustomizer<MeterRegistry> metricsCommonTags() {
+    return registry -> registry.config().commonTags("application", "rps2-app", "hikaricp", "rps2-hikaricp");
   }
 
   @Bean
