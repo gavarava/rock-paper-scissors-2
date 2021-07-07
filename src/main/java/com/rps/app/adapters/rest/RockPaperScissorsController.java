@@ -38,39 +38,39 @@ public class RockPaperScissorsController {
   RockPaperScissorsService rockPaperScissorsService;
 
   @PutMapping(path = "/player/{name}")
-  ResponseEntity<Object> createPlayer(@PathVariable String name) {
+  public ResponseEntity<Object> createPlayer(@PathVariable String name) {
     try {
       playersService.createPlayer(name);
       return ResponseEntity.created(URI.create("/player/" + name)).build();
     } catch (Exception e) {
-      log.error("Exception createPlayer => {}", e.getMessage());
+      log.error("Exception createPlayer => {}", e);
       return ResponseEntity.badRequest().build();
     }
   }
 
   @GetMapping("/player/{name}")
-  ResponseEntity<Player> getPlayer(@PathVariable String name) {
+  public ResponseEntity<Player> getPlayer(@PathVariable String name) {
     try {
       return ResponseEntity.of(playersService.getPlayer(name));
     } catch (Exception e) {
-      log.error("Exception getPlayer => {}", e.getMessage());
+      log.error("Exception getPlayer => " + e);
       return ResponseEntity.badRequest().build();
     }
   }
 
   @PostMapping(path = "/player")
-  ResponseEntity<Object> updatePlayer(@RequestBody PlayerDto playerDto) {
+  public ResponseEntity<Object> updatePlayer(@RequestBody PlayerDto playerDto) {
     try {
       playersService.updatePlayer(playerDto.toDomain());
       return ResponseEntity.ok().build();
     } catch (Exception e) {
-      log.error("Exception updatePlayer => {}", e.getMessage());
+      log.error("Exception updatePlayer => " + e);
       return ResponseEntity.badRequest().build();
     }
   }
 
   @PostMapping(path = "/start")
-  ResponseEntity<Object> startGame(@RequestBody RockPaperScissorsRequestDto request) {
+  public ResponseEntity<Object> startGame(@RequestBody RockPaperScissorsRequestDto request) {
     try {
       // TODO Handle Not found Exception
       log.info("request startGame => " + request);
@@ -79,13 +79,13 @@ public class RockPaperScissorsController {
       log.info("startedGame => {}", startedGame);
       return ResponseEntity.ok(GameDto.fromDomain(startedGame));
     } catch (Exception e) {
-      log.error("Exception startGame => {}", e.getMessage());
+      log.error("Exception startGame => " + e);
       return ResponseEntity.badRequest().body(e.getMessage());
     }
   }
 
   @PostMapping(path = "/join")
-  ResponseEntity<Object> joinGame(@RequestBody RockPaperScissorsRequestDto request) {
+  public ResponseEntity<Object> joinGame(@RequestBody RockPaperScissorsRequestDto request) {
     try {
       log.info("request joinGame => " + request);
       // TODO Handle Not found Exception
@@ -94,13 +94,13 @@ public class RockPaperScissorsController {
       log.info("joinedGame => {}", joinedGame);
       return ResponseEntity.ok(GameDto.fromDomain(joinedGame));
     } catch (Exception e) {
-      log.error("Exception joinGame => {}", e.getMessage());
+      log.error("Exception joinGame => " +  e);
       return ResponseEntity.badRequest().build();
     }
   }
 
   @PostMapping(path = "/play")
-  ResponseEntity<Object> play(@RequestBody RockPaperScissorsRequestDto request) {
+  public ResponseEntity<Object> play(@RequestBody RockPaperScissorsRequestDto request) {
     try {
       // TODO Handle Not found Exception
       var playerOptional = playersService.getPlayer(request.getPlayer());
@@ -108,19 +108,19 @@ public class RockPaperScissorsController {
       var playedGame = rockPaperScissorsService.play(request.getGameId(), move);
       return ResponseEntity.ok(GameDto.fromDomain(playedGame));
     } catch (Exception e) {
-      log.error("Exception play => {}", e.getMessage());
+      log.error("Exception play => " + e);
       return ResponseEntity.badRequest().build();
     }
   }
 
   @PostMapping(path = "/result")
-  ResponseEntity<Object> result(@RequestBody RockPaperScissorsRequestDto request) {
+  public ResponseEntity<Object> result(@RequestBody RockPaperScissorsRequestDto request) {
     try {
       // TODO Handle Not found Exception
       var result = rockPaperScissorsService.result(request.getGameId());
       return ResponseEntity.ok(GameDto.fromDomain(result));
     } catch (Exception e) {
-      log.error("Exception result => {}", e.getMessage());
+      log.error("Exception result => " + e);
       return ResponseEntity.badRequest().build();
     }
   }
