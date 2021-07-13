@@ -11,7 +11,7 @@ import static org.mockito.Mockito.verify;
 import com.google.common.collect.Sets;
 import com.rps.app.adapters.memory.TransientSessionsRepository;
 import com.rps.app.core.metrics.StartedSessionsCounter;
-import com.rps.app.core.model.Game;
+import com.rps.app.core.model.Session;
 import com.rps.app.core.model.Move;
 import com.rps.app.core.model.Player;
 import com.rps.app.ports.SessionsRepository;
@@ -40,37 +40,37 @@ class DefaultRockPaperScissorsServiceTest {
   }
 
   @Test
-  void shouldBeAbleToJoinGame_whenInviteExists() {
+  void shouldBeAbleToJoinSession_whenInviteExists() {
     var player1 = Player.builder().name("Player1").build();
-    var game = Game.builder()
+    var session = Session.builder()
         .players(Sets.newHashSet(player1))
         .id(UUID.randomUUID().toString())
         //.moves(Sets.newHashSet(new Move(ROCK, player1, now())))
         .build();
-    game = sessionsRepository.create(game);
+    session = sessionsRepository.create(session);
 
     var player2 = Player.builder().name("Player2").build();
-    var result = rockPaperScissorsService.join(player2, game.getId());
+    var result = rockPaperScissorsService.join(player2, session.getId());
 
     assertThat(result.getPlayers()).hasSize(2);
   }
 
   @Test
-  void shouldStartGameAndIncrementStartedSessionsCounter_whenStartingSession() {
+  void shouldStartSessionAndIncrementStartedSessionsCounter_whenStartingSession() {
     var player1 = Player.builder().name("Player1").creationDate(OffsetDateTime.now()).build();
-    var startedGame = rockPaperScissorsService.start(player1);
-    assertThat(startedGame.getPlayers()).hasSize(1);
+    var startedSession = rockPaperScissorsService.start(player1);
+    assertThat(startedSession.getPlayers()).hasSize(1);
     verify(startedSessionsCounter).increment();
   }
 
   @Test
-  void shouldUpdateMove_whenGameHasBeenStarted() {
+  void shouldUpdateMove_whenSessionHasBeenStarted() {
     var player1 = Player.builder().name("Player1").creationDate(OffsetDateTime.now()).build();
-    var startedGame = rockPaperScissorsService.start(player1);
-    assertThat(startedGame.getPlayers()).hasSize(1);
+    var startedSession = rockPaperScissorsService.start(player1);
+    assertThat(startedSession.getPlayers()).hasSize(1);
 
     var player1FirstMove = new Move(of("ROCK"), player1, now());
-    var result = rockPaperScissorsService.play(startedGame.getId(), player1FirstMove);
+    var result = rockPaperScissorsService.play(startedSession.getId(), player1FirstMove);
 
     assertThat(result.getMoves()).hasSize(1);
     assertThat(result.getLatestMove()).isEqualTo(Optional.of(player1FirstMove));
@@ -79,35 +79,35 @@ class DefaultRockPaperScissorsServiceTest {
   @Test
   void shouldUpdateWinner_whenOnePlayerWins() {
     var player1 = Player.builder().name("Player1").creationDate(OffsetDateTime.now()).build();
-    var game = Game.builder()
+    var session = Session.builder()
         .id(UUID.randomUUID().toString())
         .players(Sets.newHashSet(player1)).build();
-    game = sessionsRepository.create(game);
+    session = sessionsRepository.create(session);
 
     var player1FirstMove = new Move(PAPER, player1, now());
-    rockPaperScissorsService.play(game.getId(), player1FirstMove);
+    rockPaperScissorsService.play(session.getId(), player1FirstMove);
 
     var player2 = Player.builder().name("Player2").creationDate(OffsetDateTime.now()).build();
-    rockPaperScissorsService.join(player2, game.getId());
+    rockPaperScissorsService.join(player2, session.getId());
     var player2FirstMove = new Move(ROCK, player2, now());
-    var result = rockPaperScissorsService.play(game.getId(), player2FirstMove);
+    var result = rockPaperScissorsService.play(session.getId(), player2FirstMove);
 
     assertThat(result.getWinner()).isEqualTo(player1);
   }
 
   @Test
-  void shouldReturnGameWithWinner_whenCheckingResult() {
+  void shouldReturnSessionWithWinner_whenCheckingResult() {
     var player1 = Player.builder().name("Player1").creationDate(OffsetDateTime.now()).build();
-    var game = Game.builder()
+    var session = Session.builder()
         .id(UUID.randomUUID().toString())
         .players(Sets.newHashSet(player1)).moves(Sets.newHashSet(new Move(ROCK, player1, now()))).build();
     var player2 = Player.builder().name("Player2").creationDate(OffsetDateTime.now()).build();
-    game = sessionsRepository.create(game);
+    session = sessionsRepository.create(session);
 
-    rockPaperScissorsService.join(player2, game.getId());
-    rockPaperScissorsService.play(game.getId(), new Move(PAPER, player2, now()));
+    rockPaperScissorsService.join(player2, session.getId());
+    rockPaperScissorsService.play(session.getId(), new Move(PAPER, player2, now()));
 
-    var result = rockPaperScissorsService.result(game.getId());
+    var result = rockPaperScissorsService.result(session.getId());
 
     assertThat(result.getWinner()).isEqualTo(player2);
   }

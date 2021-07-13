@@ -1,13 +1,13 @@
 package com.rps.app.ports;
 
-import com.rps.app.core.model.Game;
+import com.rps.app.core.model.Session;
 import java.util.Optional;
 
 public interface SessionsRepository {
 
-  Game create(Game game);
+  Session create(Session session);
 
-  Game update(Game game);
+  Session update(Session session);
 
-  Optional<Game> findById(String gameId);
+  Optional<Session> findById(String gameId);
 }

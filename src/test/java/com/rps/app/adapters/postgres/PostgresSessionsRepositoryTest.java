@@ -8,7 +8,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.rps.app.core.model.Game;
+import com.rps.app.core.model.Session;
 import com.rps.app.core.model.Player;
 import java.time.OffsetDateTime;
 import java.util.Set;
@@ -42,7 +42,7 @@ class PostgresSessionsRepositoryTest {
     var playerName = "PlayerX";
     var sessionId = "SESSIONID";
     var player = Player.builder().name(playerName).creationDate(playerCreationTime).build();
-    var session = Game.builder()
+    var session = Session.builder()
         .id(sessionId)
         .players(Set.of(player))
         .build();

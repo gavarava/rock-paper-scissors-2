@@ -3,7 +3,7 @@ package com.rps.app.adapters.rest.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.rps.app.core.model.Game;
+import com.rps.app.core.model.Session;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Value;
@@ -12,19 +12,19 @@ import lombok.Value;
 @AllArgsConstructor
 @Value
 @Builder
-@JsonDeserialize(builder = GameDto.GameDtoBuilder.class)
-public class GameDto {
+@JsonDeserialize(builder = SessionDto.SessionDtoBuilder.class)
+public class SessionDto {
 
   @JsonProperty("gameId")
   String id;
   @JsonProperty("winner")
   String winner;
 
-  public static GameDto fromDomain(Game game) {
-    return GameDto.builder()
-        .id(game.getId())
+  public static SessionDto fromDomain(Session session) {
+    return SessionDto.builder()
+        .id(session.getId())
         //.state(game.getState().name())
-        .winner(game.getWinner() != null ? game.getWinner().getName() : null)
+        .winner(session.getWinner() != null ? session.getWinner().getName() : null)
         .build();
   }
 

@@ -1,6 +1,6 @@
 package com.rps.app.adapters.memory;
 
-import com.rps.app.core.model.Game;
+import com.rps.app.core.model.Session;
 import com.rps.app.ports.SessionsRepository;
 import java.util.Map;
 import java.util.Optional;
@@ -14,28 +14,28 @@ import org.springframework.context.annotation.Profile;
 @AllArgsConstructor
 public class TransientSessionsRepository implements SessionsRepository {
 
-  Map<String, Game> gameMap;
+  Map<String, Session> gameMap;
 
   @Override
-  public Game create(Game game) {
+  public Session create(Session session) {
     var gameId = UUID.randomUUID().toString();
-    game = game.toBuilder().id(gameId).build();
-    gameMap.put(gameId, game);
+    session = session.toBuilder().id(gameId).build();
+    gameMap.put(gameId, session);
     return gameMap.get(gameId);
   }
 
   @Override
-  public Game update(Game game) {
-    var gameId = game.getId();
+  public Session update(Session session) {
+    var gameId = session.getId();
     var gameOptional = findById(gameId);
     if (gameOptional.isPresent()) {
-      gameMap.put(gameId, game);
+      gameMap.put(gameId, session);
     }
     return gameMap.get(gameId);
   }
 
   @Override
-  public Optional<Game> findById(String gameId) {
+  public Optional<Session> findById(String gameId) {
     return Optional.ofNullable(gameMap.get(gameId));
   }
 }

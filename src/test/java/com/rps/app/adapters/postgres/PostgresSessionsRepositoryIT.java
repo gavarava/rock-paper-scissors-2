@@ -2,7 +2,7 @@ package com.rps.app.adapters.postgres;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.rps.app.core.model.Game;
+import com.rps.app.core.model.Session;
 import com.rps.app.core.model.Player;
 import java.util.Set;
 import java.util.UUID;
@@ -30,7 +30,7 @@ class PostgresSessionsRepositoryIT extends RepositoryTestsBase {
     var player2 = Player.builder().name("PlayerY").build();
     playersRepository.create(player2);
 
-    var session = Game.builder()
+    var session = Session.builder()
         .id(UUID.randomUUID().toString())
         .players(Set.of(player1, player2))
         .build();

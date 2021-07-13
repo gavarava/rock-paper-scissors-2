@@ -2,10 +2,10 @@ package com.rps.app.adapters.rest;
 
 import static java.time.OffsetDateTime.now;
 
-import com.rps.app.adapters.rest.dto.GameDto;
+import com.rps.app.adapters.rest.dto.SessionDto;
 import com.rps.app.adapters.rest.dto.PlayerDto;
 import com.rps.app.adapters.rest.dto.RockPaperScissorsRequestDto;
-import com.rps.app.core.model.Game;
+import com.rps.app.core.model.Session;
 import com.rps.app.core.model.Move;
 import com.rps.app.core.model.Move.Type;
 import com.rps.app.core.model.Player;
@@ -77,7 +77,7 @@ public class RockPaperScissorsController {
       var playerOptional = playersService.getPlayer(request.getPlayer());
       var startedGame = rockPaperScissorsService.start(playerOptional.get());
       log.info("startedGame => {}", startedGame);
-      return ResponseEntity.ok(GameDto.fromDomain(startedGame));
+      return ResponseEntity.ok(SessionDto.fromDomain(startedGame));
     } catch (Exception e) {
       log.error("Exception startGame => " + e);
       return ResponseEntity.badRequest().body(e.getMessage());
@@ -90,9 +90,9 @@ public class RockPaperScissorsController {
       log.info("request joinGame => " + request);
       // TODO Handle Not found Exception
       var playerOptional = playersService.getPlayer(request.getPlayer());
-      Game joinedGame = rockPaperScissorsService.join(playerOptional.get(), request.getGameId());
-      log.info("joinedGame => {}", joinedGame);
-      return ResponseEntity.ok(GameDto.fromDomain(joinedGame));
+      Session joinedSession = rockPaperScissorsService.join(playerOptional.get(), request.getGameId());
+      log.info("joinedGame => {}", joinedSession);
+      return ResponseEntity.ok(SessionDto.fromDomain(joinedSession));
     } catch (Exception e) {
       log.error("Exception joinGame => " +  e);
       return ResponseEntity.badRequest().build();
@@ -106,7 +106,7 @@ public class RockPaperScissorsController {
       var playerOptional = playersService.getPlayer(request.getPlayer());
       var move = new Move(Type.of(request.getMove()), playerOptional.get(), now());
       var playedGame = rockPaperScissorsService.play(request.getGameId(), move);
-      return ResponseEntity.ok(GameDto.fromDomain(playedGame));
+      return ResponseEntity.ok(SessionDto.fromDomain(playedGame));
     } catch (Exception e) {
       log.error("Exception play => " + e);
       return ResponseEntity.badRequest().build();
@@ -118,7 +118,7 @@ public class RockPaperScissorsController {
     try {
       // TODO Handle Not found Exception
       var result = rockPaperScissorsService.result(request.getGameId());
-      return ResponseEntity.ok(GameDto.fromDomain(result));
+      return ResponseEntity.ok(SessionDto.fromDomain(result));
     } catch (Exception e) {
       log.error("Exception result => " + e);
       return ResponseEntity.badRequest().build();

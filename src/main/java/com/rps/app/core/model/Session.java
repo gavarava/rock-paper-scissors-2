@@ -9,7 +9,7 @@ import lombok.Value;
 
 @Builder(toBuilder = true)
 @Value
-public class Game {
+public class Session {
 
   @NonNull
   String id;

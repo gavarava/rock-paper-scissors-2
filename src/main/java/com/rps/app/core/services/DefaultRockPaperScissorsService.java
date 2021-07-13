@@ -6,7 +6,7 @@ import static com.rps.app.core.model.Move.Type.SCISSORS;
 
 import com.google.common.collect.Sets;
 import com.rps.app.core.metrics.StartedSessionsCounter;
-import com.rps.app.core.model.Game;
+import com.rps.app.core.model.Session;
 import com.rps.app.core.model.Move;
 import com.rps.app.core.model.Player;
 import com.rps.app.core.model.State;
@@ -21,8 +21,8 @@ public class DefaultRockPaperScissorsService implements RockPaperScissorsService
   private final StartedSessionsCounter startedSessionsCounter;
 
   @Override
-  public Game start(Player player) {
-    var game = sessionsRepository.create(Game.builder()
+  public Session start(Player player) {
+    var game = sessionsRepository.create(Session.builder()
         .id(UUID.randomUUID().toString())
         .players(Sets.newHashSet(player)).state(State.START).build());
     startedSessionsCounter.increment();
@@ -30,7 +30,7 @@ public class DefaultRockPaperScissorsService implements RockPaperScissorsService
   }
 
   @Override
-  public Game join(Player player, String gameId) {
+  public Session join(Player player, String gameId) {
     return sessionsRepository.findById(gameId).stream()
         .map(game -> {
           game.getPlayers().add(player);
@@ -42,7 +42,7 @@ public class DefaultRockPaperScissorsService implements RockPaperScissorsService
   }
 
   @Override
-  public Game play(String gameId, Move move) {
+  public Session play(String gameId, Move move) {
     return sessionsRepository.findById(gameId).stream()
         .map(game -> {
           if (game.getLatestMove().isPresent()) {
@@ -98,7 +98,7 @@ public class DefaultRockPaperScissorsService implements RockPaperScissorsService
   }
 
   @Override
-  public Game result(String gameId) {
+  public Session result(String gameId) {
     // TODO Add Exception Handling
     return sessionsRepository.findById(gameId).get();
   }

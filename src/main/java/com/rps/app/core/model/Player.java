@@ -12,5 +12,6 @@ public class Player {
   OffsetDateTime creationDate;
   Long gamesPlayed;
   @NonNull
+  //FIXME name should be unique in the database
   String name;
 }
