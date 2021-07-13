@@ -9,4 +9,5 @@
   </preConditions>
 
   <include file="changelogs/20210104_initial_tables.xml" relativeToChangelogFile="true"/>
+  <include file="changelogs/20210711_sessions.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

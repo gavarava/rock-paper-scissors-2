@@ -14,7 +14,7 @@ POST http://localhost:8080/rockpaperscissors/join HTTP/1.1
 Content-Type: application/json
 
 {
-  "gameId": "04127600-e91d-48d8-aafa-154bb332b06f",
+  "gameId": "57ddd8f1-3b7d-4a3a-871c-4511ceb8665d",
   "player": "player2"
 }
 ###
@@ -22,7 +22,7 @@ POST http://localhost:8080/rockpaperscissors/play HTTP/1.1
 Content-Type: application/json
 
 {
-  "gameId": "04127600-e91d-48d8-aafa-154bb332b06f",
+  "gameId": "57ddd8f1-3b7d-4a3a-871c-4511ceb8665d",
   "player": "player1",
   "move": "rock"
 }

@@ -22,7 +22,7 @@ public class PostgresPlayersRepository implements PlayersRepository {
   public void create(Player player) {
     var params = new MapSqlParameterSource()
         .addValue("name", player.getName())
-        .addValue("creationdate", player.getCreationDate(), Types.TIMESTAMP_WITH_TIMEZONE);
+        .addValue("creationdate", OffsetDateTime.now(), Types.TIMESTAMP_WITH_TIMEZONE);
     namedParameterJdbcTemplate.update("INSERT INTO players (name, creation_date) VALUES (:name, :creationdate)", params);
   }
 

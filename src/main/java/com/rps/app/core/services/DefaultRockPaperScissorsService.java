@@ -11,6 +11,7 @@ import com.rps.app.core.model.Move;
 import com.rps.app.core.model.Player;
 import com.rps.app.core.model.State;
 import com.rps.app.ports.GameRepository;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -21,7 +22,9 @@ public class DefaultRockPaperScissorsService implements RockPaperScissorsService
 
   @Override
   public Game start(Player player) {
-    var game = gameRepository.create(Game.builder().players(Sets.newHashSet(player)).state(State.START).build());
+    var game = gameRepository.create(Game.builder()
+        .id(UUID.randomUUID().toString())
+        .players(Sets.newHashSet(player)).state(State.START).build());
     startedSessionsCounter.increment();
     return game;
   }

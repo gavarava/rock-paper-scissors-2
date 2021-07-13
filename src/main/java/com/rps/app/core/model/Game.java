@@ -4,14 +4,18 @@ import java.util.Comparator;
 import java.util.Optional;
 import java.util.Set;
 import lombok.Builder;
+import lombok.NonNull;
 import lombok.Value;
 
 @Builder(toBuilder = true)
 @Value
 public class Game {
 
+  @NonNull
   String id;
   State state;
+
+  @NonNull
   Set<Player> players;
   Set<Move> moves;
   Player winner;
