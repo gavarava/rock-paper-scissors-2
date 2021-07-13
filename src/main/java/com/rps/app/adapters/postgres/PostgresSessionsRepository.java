@@ -7,7 +7,7 @@ import static com.rps.app.adapters.postgres.SqlQueries.LIST_SESSIONS_QUERY;
 
 import com.rps.app.core.model.Game;
 import com.rps.app.core.model.Player;
-import com.rps.app.ports.GameRepository;
+import com.rps.app.ports.SessionsRepository;
 import java.sql.Types;
 import java.time.OffsetDateTime;
 import java.util.HashSet;
@@ -21,7 +21,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 @Slf4j
 @AllArgsConstructor
-public class PostgresGameRepository implements GameRepository {
+public class PostgresSessionsRepository implements SessionsRepository {
 
 
   private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;

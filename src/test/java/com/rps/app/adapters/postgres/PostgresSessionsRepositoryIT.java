@@ -12,13 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 @Slf4j
-class PostgresGameRepositoryIT extends RepositoryTestsBase {
+class PostgresSessionsRepositoryIT extends RepositoryTestsBase {
 
   @Autowired
   NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
   @Autowired
-  PostgresGameRepository gameRepository;
+  PostgresSessionsRepository sessionsRepository;
 
   @Autowired
   PostgresPlayersRepository playersRepository;
@@ -35,9 +35,9 @@ class PostgresGameRepositoryIT extends RepositoryTestsBase {
         .players(Set.of(player1, player2))
         .build();
 
-    gameRepository.create(session);
+    sessionsRepository.create(session);
 
-    var result = gameRepository.findById(session.getId());
+    var result = sessionsRepository.findById(session.getId());
     assertThat(result).hasValueSatisfying(game -> {
       assertThat(game.getId()).isEqualTo(session.getId());
       assertThat(game.getPlayers()).hasSize(2);

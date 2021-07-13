@@ -3,7 +3,7 @@ package com.rps.app.ports;
 import com.rps.app.core.model.Game;
 import java.util.Optional;
 
-public interface GameRepository {
+public interface SessionsRepository {
 
   Game create(Game game);
 

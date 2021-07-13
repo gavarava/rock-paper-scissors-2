@@ -1,6 +1,6 @@
 package com.rps.app.adapters.postgres;
 
-import com.rps.app.ports.GameRepository;
+import com.rps.app.ports.SessionsRepository;
 import com.rps.app.ports.PlayersRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,9 +15,9 @@ public class DatabaseConfiguration {
   }
 
   @Bean
-  GameRepository gameRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-    //TODO add profile to return new TransientGameRepository(new HashMap<>());
-    return new PostgresGameRepository(namedParameterJdbcTemplate);
+  SessionsRepository sessionsRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+    //TODO add profile to return new TransientSessionsRepository(new HashMap<>());
+    return new PostgresSessionsRepository(namedParameterJdbcTemplate);
   }
 
 }

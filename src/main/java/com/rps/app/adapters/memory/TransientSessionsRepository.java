@@ -1,7 +1,7 @@
 package com.rps.app.adapters.memory;
 
 import com.rps.app.core.model.Game;
-import com.rps.app.ports.GameRepository;
+import com.rps.app.ports.SessionsRepository;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Profile;
 @Profile("prod")
 @Slf4j
 @AllArgsConstructor
-public class TransientGameRepository implements GameRepository {
+public class TransientSessionsRepository implements SessionsRepository {
 
   Map<String, Game> gameMap;
 

@@ -11,7 +11,6 @@ import static org.mockito.Mockito.when;
 import com.rps.app.core.model.Game;
 import com.rps.app.core.model.Player;
 import java.time.OffsetDateTime;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,18 +21,18 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
-class PostgresGameRepositoryTest {
+class PostgresSessionsRepositoryTest {
 
   @Mock
   NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-  PostgresGameRepository postgresGameRepository;
+  PostgresSessionsRepository postgresSessionsRepository;
 
   @BeforeEach
   void setup() {
     MockitoAnnotations.openMocks(this);
     when(namedParameterJdbcTemplate.update(any(), any(MapSqlParameterSource.class))).thenReturn(1);
-    postgresGameRepository = new PostgresGameRepository(namedParameterJdbcTemplate);
+    postgresSessionsRepository = new PostgresSessionsRepository(namedParameterJdbcTemplate);
   }
 
 
@@ -47,7 +46,7 @@ class PostgresGameRepositoryTest {
         .id(sessionId)
         .players(Set.of(player))
         .build();
-    postgresGameRepository.create(session);
+    postgresSessionsRepository.create(session);
 
     var parameterSourceArgumentCaptor = ArgumentCaptor.forClass(MapSqlParameterSource.class);
     var stringArgumentCaptor = ArgumentCaptor.forClass(String.class);

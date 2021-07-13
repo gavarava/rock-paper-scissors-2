@@ -10,19 +10,19 @@ import com.rps.app.core.model.Game;
 import com.rps.app.core.model.Move;
 import com.rps.app.core.model.Player;
 import com.rps.app.core.model.State;
-import com.rps.app.ports.GameRepository;
+import com.rps.app.ports.SessionsRepository;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class DefaultRockPaperScissorsService implements RockPaperScissorsService {
 
-  private final GameRepository gameRepository;
+  private final SessionsRepository sessionsRepository;
   private final StartedSessionsCounter startedSessionsCounter;
 
   @Override
   public Game start(Player player) {
-    var game = gameRepository.create(Game.builder()
+    var game = sessionsRepository.create(Game.builder()
         .id(UUID.randomUUID().toString())
         .players(Sets.newHashSet(player)).state(State.START).build());
     startedSessionsCounter.increment();
@@ -31,10 +31,10 @@ public class DefaultRockPaperScissorsService implements RockPaperScissorsService
 
   @Override
   public Game join(Player player, String gameId) {
-    return gameRepository.findById(gameId).stream()
+    return sessionsRepository.findById(gameId).stream()
         .map(game -> {
           game.getPlayers().add(player);
-          return gameRepository.update(game);
+          return sessionsRepository.update(game);
         })
         .findFirst()
         // TODO Add Exception Handling
@@ -43,7 +43,7 @@ public class DefaultRockPaperScissorsService implements RockPaperScissorsService
 
   @Override
   public Game play(String gameId, Move move) {
-    return gameRepository.findById(gameId).stream()
+    return sessionsRepository.findById(gameId).stream()
         .map(game -> {
           if (game.getLatestMove().isPresent()) {
             game = game.toBuilder()
@@ -55,7 +55,7 @@ public class DefaultRockPaperScissorsService implements RockPaperScissorsService
                 .moves(Sets.newHashSet(move))
                 .build();
           }
-          return gameRepository.update(game);
+          return sessionsRepository.update(game);
         })
         .findFirst()
         // TODO Add Exception Handling
@@ -100,6 +100,6 @@ public class DefaultRockPaperScissorsService implements RockPaperScissorsService
   @Override
   public Game result(String gameId) {
     // TODO Add Exception Handling
-    return gameRepository.findById(gameId).get();
+    return sessionsRepository.findById(gameId).get();
   }
 }

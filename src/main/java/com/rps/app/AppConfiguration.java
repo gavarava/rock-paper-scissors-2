@@ -9,7 +9,7 @@ import com.rps.app.core.metrics.StartedSessionsCounter;
 import com.rps.app.core.services.DefaultRockPaperScissorsService;
 import com.rps.app.core.services.PlayersService;
 import com.rps.app.core.services.RockPaperScissorsService;
-import com.rps.app.ports.GameRepository;
+import com.rps.app.ports.SessionsRepository;
 import com.rps.app.ports.PlayersRepository;
 import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.boot.actuate.autoconfigure.metrics.MeterRegistryCustomizer;
@@ -28,8 +28,8 @@ public class AppConfiguration {
   }
 
   @Bean
-  RockPaperScissorsService rockPaperScissorsService(GameRepository gameRepository, StartedSessionsCounter startedSessionsCounter) {
-    return new DefaultRockPaperScissorsService(gameRepository, startedSessionsCounter);
+  RockPaperScissorsService rockPaperScissorsService(SessionsRepository sessionsRepository, StartedSessionsCounter startedSessionsCounter) {
+    return new DefaultRockPaperScissorsService(sessionsRepository, startedSessionsCounter);
   }
 
   @Bean
