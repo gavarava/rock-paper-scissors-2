@@ -1,0 +1,13 @@
+###
+PUT http://localhost:8080/rockpaperscissors/player/{{player_one}}
+###
+PUT http://localhost:8080/rockpaperscissors/player/{{player_two}}
+###
+POST http://localhost:8080/rockpaperscissors/start HTTP/1.1
+Content-Type: application/json
+
+{
+  "player": "{{player_one}}"
+}
+
+###

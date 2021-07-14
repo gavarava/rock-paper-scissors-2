@@ -53,7 +53,7 @@ public class RockPaperScissorsController {
     try {
       return ResponseEntity.of(playersService.getPlayer(name));
     } catch (Exception e) {
-      log.error("Exception getPlayer => " + e);
+      log.error("Exception getPlayer => ", e);
       return ResponseEntity.badRequest().build();
     }
   }
@@ -64,7 +64,7 @@ public class RockPaperScissorsController {
       playersService.updatePlayer(playerDto.toDomain());
       return ResponseEntity.ok().build();
     } catch (Exception e) {
-      log.error("Exception updatePlayer => " + e);
+      log.error("Exception updatePlayer => ", e);
       return ResponseEntity.badRequest().build();
     }
   }
@@ -79,7 +79,7 @@ public class RockPaperScissorsController {
       log.info("startedGame => {}", startedGame);
       return ResponseEntity.ok(SessionDto.fromDomain(startedGame));
     } catch (Exception e) {
-      log.error("Exception startGame => " + e);
+      log.error("Exception startGame => ", e);
       return ResponseEntity.badRequest().body(e.getMessage());
     }
   }
@@ -94,7 +94,7 @@ public class RockPaperScissorsController {
       log.info("joinedGame => {}", joinedSession);
       return ResponseEntity.ok(SessionDto.fromDomain(joinedSession));
     } catch (Exception e) {
-      log.error("Exception joinGame => " +  e);
+      log.error("Exception joinGame => ", e);
       return ResponseEntity.badRequest().build();
     }
   }
@@ -108,7 +108,7 @@ public class RockPaperScissorsController {
       var playedGame = rockPaperScissorsService.play(request.getGameId(), move);
       return ResponseEntity.ok(SessionDto.fromDomain(playedGame));
     } catch (Exception e) {
-      log.error("Exception play => " + e);
+      log.error("Exception play => ", e);
       return ResponseEntity.badRequest().build();
     }
   }
@@ -120,7 +120,7 @@ public class RockPaperScissorsController {
       var result = rockPaperScissorsService.result(request.getGameId());
       return ResponseEntity.ok(SessionDto.fromDomain(result));
     } catch (Exception e) {
-      log.error("Exception result => " + e);
+      log.error("Exception result => ", e);
       return ResponseEntity.badRequest().build();
     }
   }

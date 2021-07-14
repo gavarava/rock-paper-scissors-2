@@ -1,0 +1,43 @@
+###
+POST http://localhost:8080/rockpaperscissors/join HTTP/1.1
+Content-Type: application/json
+
+{
+  "gameId": "{{session_id}}",
+  "player": "{{player_two}}"
+}
+###
+POST http://localhost:8080/rockpaperscissors/play HTTP/1.1
+Content-Type: application/json
+
+{
+  "gameId": "{{session_id}}",
+  "player": "{{player_two}}",
+  "move": "rock"
+}
+###
+POST http://localhost:8080/rockpaperscissors/result HTTP/1.1
+Content-Type: application/json
+
+{
+  "gameId": "{{session_id}}",
+  "player": "{{player_two}}"
+}
+###
+POST http://localhost:8080/rockpaperscissors/play HTTP/1.1
+Content-Type: application/json
+
+{
+  "gameId": "{{session_id}}",
+  "player": "{{player_one}}",
+  "move": "scissors"
+}
+###
+POST http://localhost:8080/rockpaperscissors/result HTTP/1.1
+Content-Type: application/json
+
+{
+  "gameId": "{{session_id}}",
+  "player": "{{player_two}}"
+}
+### returns winner

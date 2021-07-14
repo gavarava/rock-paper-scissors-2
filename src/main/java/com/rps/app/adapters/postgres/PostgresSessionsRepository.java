@@ -1,12 +1,17 @@
 package com.rps.app.adapters.postgres;
 
+import static com.rps.app.adapters.postgres.SqlQueries.INSERT_MOVE_QUERY;
 import static com.rps.app.adapters.postgres.SqlQueries.INSERT_PLAYER_SESSION_MAPPING_QUERY;
 import static com.rps.app.adapters.postgres.SqlQueries.INSERT_SESSION_QUERY;
+import static com.rps.app.adapters.postgres.SqlQueries.LIST_MOVES_QUERY;
 import static com.rps.app.adapters.postgres.SqlQueries.LIST_PLAYER_SESSION_MAPPINGS_QUERY;
 import static com.rps.app.adapters.postgres.SqlQueries.LIST_SESSIONS_QUERY;
+import static com.rps.app.adapters.postgres.SqlQueries.UPDATE_SESSION_QUERY;
 
-import com.rps.app.core.model.Session;
+import com.rps.app.core.model.Move;
+import com.rps.app.core.model.Move.Type;
 import com.rps.app.core.model.Player;
+import com.rps.app.core.model.Session;
 import com.rps.app.ports.SessionsRepository;
 import java.sql.Types;
 import java.time.OffsetDateTime;
@@ -32,21 +37,74 @@ public class PostgresSessionsRepository implements SessionsRepository {
         .addValue("sessionid", session.getId())
         .addValue("creationdate", creationTimestamp, Types.TIMESTAMP_WITH_TIMEZONE);
     namedParameterJdbcTemplate.update(INSERT_SESSION_QUERY, params);
-    session.getPlayers().forEach(player -> {
-      var playerSessionMappingParams = new MapSqlParameterSource()
-          .addValue("sessionid", session.getId())
-          .addValue("playername", player.getName());
-      namedParameterJdbcTemplate.update(
-          INSERT_PLAYER_SESSION_MAPPING_QUERY,
-          playerSessionMappingParams);
-    });
+    addPlayerToSessionMapping(session, null);
     return session;
   }
 
   @Override
-  public Session update(Session session) {
-    // RETURNING query
-    return null;
+  public Session update(Session sessionToUpdate) {
+    var sessionOptional = findById(sessionToUpdate.getId());
+    if (sessionOptional.isPresent()) {
+      var foundSession = sessionOptional.get();
+      if (foundSession.getPlayers().size() < sessionToUpdate.getPlayers().size()) {
+        foundSession.getPlayers().forEach(existingPlayer -> addPlayerToSessionMapping(sessionToUpdate, existingPlayer.getName()));
+      }
+      if (foundSession.getMoves() != null) {
+        updateMoves(foundSession, sessionToUpdate);
+      } else {
+        addMove(sessionToUpdate);
+      }
+      addWinnerIfExists(sessionToUpdate, foundSession);
+    } else {
+      throw new RuntimeException("Session with id < " + sessionToUpdate.getId() + " > could not be found");
+    }
+    return findById(sessionToUpdate.getId())
+        .orElseThrow(() -> new IllegalStateException("Unable to find Session with id = " + sessionToUpdate.getId()));
+  }
+
+  private void addWinnerIfExists(Session sessionToUpdate, Session foundSession) {
+    var winner = sessionToUpdate.getWinner();
+    if (winner != null) {
+      var params = new MapSqlParameterSource()
+          .addValue("sessionid", sessionToUpdate.getId())
+          .addValue("winner", winner.getName());
+      var update = namedParameterJdbcTemplate.update(UPDATE_SESSION_QUERY, params);
+      if (update != 0) {
+        log.warn("Did not update winner {} in session {}", winner.getName(), foundSession.getId());
+      }
+    }
+  }
+
+  private void updateMoves(Session foundSession, Session sessionToUpdate) {
+    if (foundSession.getMoves().size() < sessionToUpdate.getMoves().size()) {
+      addMove(sessionToUpdate);
+    }
+  }
+
+  private void addMove(Session sessionToUpdate) {
+    sessionToUpdate.getLatestMove().ifPresent(latestMoveToBeAdded -> {
+      var params = new MapSqlParameterSource()
+          .addValue("sessionid", sessionToUpdate.getId())
+          .addValue("type", latestMoveToBeAdded.getType().name())
+          .addValue("playedAt", latestMoveToBeAdded.getPlayedAt())
+          .addValue("playername", latestMoveToBeAdded.getPlayer().getName());
+      namedParameterJdbcTemplate.update(
+          INSERT_MOVE_QUERY,
+          params);
+    });
+  }
+
+  private void addPlayerToSessionMapping(Session session, String existingPlayerName) {
+    session.getPlayers().forEach(player -> {
+      if (!player.getName().equals(existingPlayerName)) {
+        var playerSessionMappingParams = new MapSqlParameterSource()
+            .addValue("sessionid", session.getId())
+            .addValue("playername", player.getName());
+        namedParameterJdbcTemplate.update(
+            INSERT_PLAYER_SESSION_MAPPING_QUERY,
+            playerSessionMappingParams);
+      }
+    });
   }
 
   @Override
@@ -62,13 +120,29 @@ public class PostgresSessionsRepository implements SessionsRepository {
 
     log.info("Players {} in session {}", players, sessionId);
 
-    var sessions = namedParameterJdbcTemplate
-        .query(LIST_SESSIONS_QUERY, new MapSqlParameterSource().addValue("sessionid", sessionId), (resultSet, i) -> Session
-            .builder()
-            .id(resultSet.getString("session_id"))
-            .players(new HashSet<>(players))
-            .build()
+    var moves = namedParameterJdbcTemplate
+        .query(LIST_MOVES_QUERY, new MapSqlParameterSource().addValue("sessionid", sessionId),
+            (resultSet, i) -> new Move(Type.of(resultSet.getString("type")),
+                Player.builder().name(resultSet.getString("name")).build(), resultSet.getObject("creation_date", OffsetDateTime.class))
         );
-    return Optional.of(sessions.get(0));
+
+    log.info("Moves {} in session {}", moves, sessionId);
+
+    var sessions = namedParameterJdbcTemplate
+        .query(LIST_SESSIONS_QUERY, new MapSqlParameterSource().addValue("sessionid", sessionId), (resultSet, i) -> {
+              var winner = resultSet.getString("winner");
+              return Session
+                  .builder()
+                  .id(resultSet.getString("session_id"))
+                  .players(new HashSet<>(players))
+                  .moves(new HashSet<>(moves))
+                  .winner(Optional.ofNullable(resultSet.getString("winner"))
+                      .map(w -> Player.builder().name(winner).build())
+                      .orElse(null))
+                  .build();
+            }
+        );
+
+    return sessions.isEmpty() ? Optional.empty() : Optional.of(sessions.get(0));
   }
 }

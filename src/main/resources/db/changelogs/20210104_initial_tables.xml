@@ -10,9 +10,8 @@
         <constraints nullable="false"/>
       </column>
       <column name="name" type="VARCHAR(200)">
-        <constraints nullable="false"/>
+        <constraints nullable="false" unique="true"/>
       </column>
-      <column defaultValueNumeric="0" name="games_played" type="INTEGER"/>
     </createTable>
   </changeSet>
 </databaseChangeLog>

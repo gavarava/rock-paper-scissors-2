@@ -1,7 +1,7 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
-  <changeSet author="rpsauthor" id="20210104-1">
+  <changeSet author="rpsauthor" id="20210711-1">
     <createTable tableName="sessions">
       <column autoIncrement="true" name="id" type="INTEGER">
         <constraints nullable="false" primaryKey="true" primaryKeyName="session_pkey"/>
@@ -11,6 +11,9 @@
       </column>
       <column name="session_id" type="VARCHAR(200)">
         <constraints nullable="false" unique="true" uniqueConstraintName="session_id_unique"/>
+      </column>
+      <column name="winner" type="VARCHAR(200)">
+        <constraints nullable="true" referencedTableName="players" referencedColumnNames="name" foreignKeyName="winner_name_fkey"/>
       </column>
     </createTable>
     <createTable tableName="player_session_mapping">
