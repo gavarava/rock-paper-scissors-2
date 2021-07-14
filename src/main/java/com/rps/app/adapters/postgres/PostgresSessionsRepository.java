@@ -49,10 +49,8 @@ public class PostgresSessionsRepository implements SessionsRepository {
       if (foundSession.getPlayers().size() < sessionToUpdate.getPlayers().size()) {
         foundSession.getPlayers().forEach(existingPlayer -> addPlayerToSessionMapping(sessionToUpdate, existingPlayer.getName()));
       }
-      if (foundSession.getMoves() != null) {
+      if (foundSession.getMoves() != null && sessionToUpdate.getMoves() != null) {
         updateMoves(foundSession, sessionToUpdate);
-      } else {
-        addMove(sessionToUpdate);
       }
       addWinnerIfExists(sessionToUpdate, foundSession);
     } else {
@@ -69,7 +67,7 @@ public class PostgresSessionsRepository implements SessionsRepository {
           .addValue("sessionid", sessionToUpdate.getId())
           .addValue("winner", winner.getName());
       var update = namedParameterJdbcTemplate.update(UPDATE_SESSION_QUERY, params);
-      if (update != 0) {
+      if (update == 0) {
         log.warn("Did not update winner {} in session {}", winner.getName(), foundSession.getId());
       }
     }
