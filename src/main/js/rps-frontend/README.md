@@ -5,6 +5,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## Dependencies Tested
 - React Router DOM
 - Material UI
+  - Material UI ICONS
 - web-vitals
 - AXIOS
 ## Available Scripts
