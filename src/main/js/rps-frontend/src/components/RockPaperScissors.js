@@ -7,6 +7,19 @@ import axios from "axios";
 import {makeStyles} from "@material-ui/core/styles";
 import BackspaceIcon from '@material-ui/icons/Backspace';
 
+/**
+ Stateless function components don't have state.
+ They can be used, if you don't need state and lifecycle methods, etc.
+ Furthermore they can be turned into stateFUL function components by using hooks.
+ Hooks are predefined functions that can be used inside a function component to enhance it with state,
+ life cycle management, etc. But that's a broader topic.
+ Without hooks you can use stateless components instead of class components to keep your
+ code small (function instead of class, no this, no render function, just return,
+ reuse code more easily by importing functions and using it inside the component)
+ To improve performance you'd need hooks (useMemo() hook, e.g.) again.
+ It takes some time to get used to the concept of hooks, but it's worth it.
+ I prefer them over class components now, mainly because the code is cleaner.
+ */
 export const RockPaperScissors = () => {
 
   const useStyles = makeStyles((theme) => ({
@@ -59,7 +72,7 @@ export const RockPaperScissors = () => {
   }, [submitValue, textValue, getPlayerValue]);
 
   return (
-      <Grid container spacing={10}>
+      <Grid container spacing={10} justify = "center">
         <form className={classes.form} noValidate>
           <Grid item xs={10}>
             <TextField
@@ -79,10 +92,6 @@ export const RockPaperScissors = () => {
                   variant="outlined"
                   color="secondary"
                   onClick={() => setSubmitValue(true)}>CREATE</Button>
-              <Button
-                  variant="outlined"
-                  color="secondary"
-                  onClick={() => setGetPlayerValue(true)}>Get Player</Button>
             </Grid>
           </Grid>
         </form>
