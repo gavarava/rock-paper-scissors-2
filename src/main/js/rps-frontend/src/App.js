@@ -30,21 +30,9 @@ function App() {
   }
 
   return (
-      <div className="App">
-        <header className="App-header">
-          <Grid container spacing={10} justify = "center">
-            <Grid item xs={5}>
-              <Grid item xs={3} justify = "center">
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => displayWindow()}>{buttonText}</Button>
-              </Grid>
-            </Grid>
-            {mainWindow}
-          </Grid>
-        </header>
-      </div>
+      <App>
+        <Button variant="contained">Hello World</Button>;
+      </App>
   );
 }
 
