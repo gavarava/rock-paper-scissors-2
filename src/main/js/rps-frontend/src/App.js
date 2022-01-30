@@ -1,39 +1,21 @@
+import * as React from 'react';
 import './App.css';
+import {Container, Grid, ImageList} from "@material-ui/core";
 import RockPaperScissors from "./components/RockPaperScissors";
-import Counter from "./components/Counter";
-import {Button, Grid} from "@material-ui/core";
-import {useState} from "react";
+
 
 function App() {
-  const [state, setState] = useState({
-    displayWindow: false,
-    displaySignIn: false
-  })
-
-  const displayWindow = () => {
-    setState({
-      displayWindow: !state.displayWindow,
-      displaySignIn: state.displaySignIn
-    })
-  }
-
-  let mainWindow = ''
-  let buttonText = 'Play Rock-Paper-Scissors'
-
-  if (state.displayWindow) {
-    mainWindow = (
-        <Grid item xs={10} justify = "center">
-          <Counter></Counter>
-        </Grid>
-    )
-    buttonText = 'CLOSE X'
-  }
-
   return (
-      <App>
-        <Button variant="contained">Hello World</Button>;
-      </App>
+      <div className="App">
+          <header className="App-header">
+            <Container maxWidth="sm">
+              <Grid>
+                <RockPaperScissors/>
+              </Grid>
+            </Container>
+          </header>
+      </div>
   );
-}
+};
 
 export default App;

@@ -82,6 +82,7 @@ export const RockPaperScissors = () => {
                 onChange={args => setTextValue(args.target.value)}
             /> <Button
               color="primary"
+              type={"submit"}
               onClick={() => {
                 if (textValue !== '') {
                   setTextValue('')
