@@ -56,6 +56,7 @@ export const RockPaperScissorsWindow = () => {
     axios.post("http://localhost:8080/rockpaperscissors/join",
         {"gameId": inviteCode, "player": name})
     .then((response) => {
+      resetStates()
       let gameId = response.data.gameId;
       console.log("Responding when generateInviteCode: " + gameId)
       setInviteCode(gameId)
@@ -73,7 +74,8 @@ export const RockPaperScissorsWindow = () => {
   const doRegisterPlayer = async (name) => {
     axios.put("http://localhost:8080/rockpaperscissors/player/" + name)
     .then((response) => {
-      setPlayerName(response.data.name)
+      resetStates()
+      setPlayerName(name)
       handleChangeStage("displayWelcomeAndDisplayStartGame")
     }, (error) => {
       console.warn(error)
