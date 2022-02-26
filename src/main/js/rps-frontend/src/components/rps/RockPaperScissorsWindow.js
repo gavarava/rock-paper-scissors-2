@@ -14,22 +14,43 @@ import axios from "axios";
 import {useInterval} from "../support/useInterval";
 
 const POLL_INTERVAL = 1000;
+
+function getOpponentNamesArray(response) {
+  let array = response.data.players.replace('[', '').replace(']', '').split(
+      ',');
+  return array;
+}
+
 export const RockPaperScissorsWindow = () => {
   const [stage, setStage] = useState('introAndDisplayRegistration')
   const [playerName, setPlayerName] = useState('')
-  const [opponentName, setOpponentName] = useState('')
+  const [opponentNames, setOpponentNames] = useState([])
+  const [winner, setWinner] = useState('')
+  const [lastMove, setLastMove] = useState('')
   const [formError, setFormError] = useState(false)
   const [inputHelperText, setInputHelperText] = useState('')
-  const [inviteCode, setInviteCode] = useState('')
+  const [sessionCode, setSessionCode] = useState('')
 
   useInterval(() => {
     if (stage === 'showInvitationAndPollForNextPlayer') {
       console.log("Poll for Next Player")
+      pollResult(sessionCode, playerName)
+      console.log(opponentNames)
+      if(opponentNames.length === 2) {
+        handleChangeStage('joinGameAndPollForBothPlayersReady')
+      }
+    }
+    if (stage === 'pollResult') {
+      console.log("Polling for winner")
+      pollResult(sessionCode, playerName)
     }
   }, POLL_INTERVAL)
 
   const resetStates = () => {
     setPlayerName('')
+    setOpponentNames([])
+    setLastMove('')
+    setSessionCode('')
     setFormError(false)
     setInputHelperText('')
   }
@@ -44,7 +65,7 @@ export const RockPaperScissorsWindow = () => {
     .then((response) => {
       let gameId = response.data.gameId;
       console.log("Responding when generateInviteCode: " + gameId)
-      setInviteCode(gameId)
+      setSessionCode(gameId)
       handleChangeStage('showInvitationAndPollForNextPlayer')
     }, (error) => {
       console.warn(error)
@@ -52,21 +73,22 @@ export const RockPaperScissorsWindow = () => {
     })
   }
 
-  const handleJoinGame = (name, inviteCode) => {
+  const handleJoinGame = (name, sessionCode) => {
     axios.post("http://localhost:8080/rockpaperscissors/join",
-        {"gameId": inviteCode, "player": name})
+        {"gameId": sessionCode, "player": name})
     .then((response) => {
-      resetStates()
+      setFormError(false)
       let gameId = response.data.gameId;
       console.log("Responding when generateInviteCode: " + gameId)
-      setInviteCode(gameId)
+      setSessionCode(gameId)
       // THIS is BAD Business Logic guessing player1 and 2 instead of api returning the right stuff
-      let array = response.data.players.replace('[','').replace(']','').split(',');
-      setOpponentName(array.toString())
+      let array = getOpponentNamesArray(response);
+      setOpponentNames(array)
       handleChangeStage('joinGameAndPollForBothPlayersReady')
     }, (error) => {
       setFormError(true)
-      setInputHelperText("Invite code not found!")
+      setInputHelperText(
+          "Session not found! Start Over with New game or another code.")
       throw error
     })
   }
@@ -81,6 +103,39 @@ export const RockPaperScissorsWindow = () => {
       console.warn(error)
       setFormError(true)
       setInputHelperText("Try something else")
+    })
+  }
+
+  const handlePlay = async (gameId, player, move) => {
+    setLastMove(move)
+    if (player === undefined || player === '') {
+      throw Error('player cannot be undefined')
+    }
+    axios.post("http://localhost:8080/rockpaperscissors/play",
+        {"gameId": gameId, "player": player, "move": move})
+    .then((response) => {
+      console.log("handlePlay response: " + response)
+      handleChangeStage("pollResult")
+    }, (error) => {
+      console.warn(error)
+    })
+  }
+
+  const pollResult = async (gameId, player) => {
+    if (player === undefined || player === '') {
+      throw Error('player cannot be undefined')
+    }
+    axios.post("http://localhost:8080/rockpaperscissors/result",
+        {"gameId": gameId, "player": player})
+    .then((response) => {
+      if(response.data.winner) {
+        console.info("winner IS " + response.data.winner)
+        setWinner(response.data.winner)
+        handleChangeStage('showWinner')
+      }
+      setOpponentNames(getOpponentNamesArray(response))
+    }, (error) => {
+      console.warn(error)
     })
   }
 
@@ -105,7 +160,7 @@ export const RockPaperScissorsWindow = () => {
               return (
                   <Container maxWidth="xl">
                     <DynamicResponse
-                        displayText={"Hello there! Let's play a game of Rock Paper Scissors today!"}/>
+                        displayText={"Hi there! Challenge someone to a game of Rock Paper Scissors!"}/>
                     <Action description={"Start here!"}
                             onActionRun={() => {
                               resetStates()
@@ -126,7 +181,7 @@ export const RockPaperScissorsWindow = () => {
                       <TableBody>
                         <TableRow>
                           <TableCell>
-                            <Action description={"Go Back"}
+                            <Action description={"Start Over"}
                                     onActionRun={() => handleChangeStage(
                                         "introAndDisplayRegistration")}/>
                           </TableCell>
@@ -156,13 +211,13 @@ export const RockPaperScissorsWindow = () => {
                                error={formError}
                                variant="outlined"
                                helperText={inputHelperText}
-                               onChangeCapture={(event) => setInviteCode(
+                               onChangeCapture={(event) => setSessionCode(
                                    event.target.value)}/>
                     <Table>
                       <TableBody>
                         <TableRow>
                           <TableCell>
-                            <Action description={"Go Back"}
+                            <Action description={"Start Over"}
                                     onActionRun={() => handleChangeStage(
                                         "introAndDisplayRegistration")}/>
                           </TableCell>
@@ -174,7 +229,7 @@ export const RockPaperScissorsWindow = () => {
                           <TableCell>
                             <Action description={"Join game!"}
                                     onActionRun={() => handleJoinGame(
-                                        playerName, inviteCode)}/>
+                                        playerName, sessionCode)}/>
                           </TableCell>
                         </TableRow>
                       </TableBody>
@@ -188,8 +243,8 @@ export const RockPaperScissorsWindow = () => {
                         displayText={"Hey " + playerName + "!"}/>
                     <DynamicResponse
                         displayText={"Share this code with your opponent: "
-                        + inviteCode}/>
-                    <Action description={"Go Back"}
+                        + sessionCode}/>
+                    <Action description={"Start Over"}
                             onActionRun={() => handleChangeStage(
                                 "introAndDisplayRegistration")}/>
                   </Container>
@@ -198,11 +253,80 @@ export const RockPaperScissorsWindow = () => {
               return (
                   <Container maxWidth="xl">
                     <DynamicResponse
-                        displayText={"Hey " + playerName + "!"}/>
+                        displayText={"Hey " + playerName + "! Are you ready?"}/>
                     <DynamicResponse
-                        displayText={"Waiting for " + opponentName
-                        + " to be ready!"}/>
-                    <Action description={"Go Back"}
+                        displayText={opponentNames[0] + " VS "
+                        + opponentNames[1]}/>
+                    <DynamicResponse
+                        displayText={"ROCK! PAPER! SCISSORS!"}/>
+                    <Table>
+                      <TableBody>
+                        <TableRow>
+                          <TableCell>
+                            <Action description={"Chickening out"}
+                                    onActionRun={() => handleChangeStage(
+                                        "introAndDisplayRegistration")}/>
+                          </TableCell>
+                          <TableCell>
+                            <Action description={"Ready"}
+                                    onActionRun={() => handleChangeStage(
+                                        "showMovesAndWait")}/>
+                          </TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  </Container>
+              )
+            case 'showMovesAndWait':
+              return (
+                  <Container maxWidth="xl">
+                    <DynamicResponse
+                        displayText={"Come on " + playerName + "!"}/>
+                    <DynamicResponse
+                        displayText={"ROCK! PAPER! SCISSORS!"}/>
+                    <Table>
+                      <TableBody>
+                        <TableRow>
+                          <TableCell>
+                            <Action description={"Start Over"}
+                                    onActionRun={() => handleChangeStage(
+                                        "introAndDisplayRegistration")}/>
+                          </TableCell>
+                          <TableCell>
+                            <Action description={"ROCK"}
+                                    onActionRun={() => handlePlay(sessionCode,
+                                        playerName, 'rock')}/>
+                          </TableCell>
+                          <TableCell>
+                            <Action description={"PAPER"}
+                                    onActionRun={() => handlePlay(sessionCode,
+                                        playerName, 'paper')}/>
+                          </TableCell>
+                          <TableCell>
+                            <Action description={"SCISSORS"}
+                                    onActionRun={() => handlePlay(sessionCode,
+                                        playerName, 'scissors')}/>
+                          </TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  </Container>
+              )
+            case 'pollResult':
+              return (
+                  <Container maxWidth="xl">
+                    <DynamicResponse
+                        displayText={"Polling Response"}/>
+                  </Container>
+              )
+            case 'showWinner':
+              return (
+                  <Container maxWidth="xl">
+                    <DynamicResponse
+                        displayText={"Hey " + playerName+"! You played " + lastMove + "!"}/>
+                    <DynamicResponse
+                        displayText={winner + " has won the game"}/>
+                    <Action description={"Play Again"}
                             onActionRun={() => handleChangeStage(
                                 "introAndDisplayRegistration")}/>
                   </Container>
