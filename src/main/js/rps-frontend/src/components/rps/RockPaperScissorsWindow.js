@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { makeStyles } from "@material-ui/core/styles";
 import {useState} from 'react';
 import {
   Container,
@@ -9,7 +10,7 @@ import {
   TextField
 } from "@material-ui/core";
 import {Action} from "./Action";
-import {DynamicResponse} from "./DynamicResponse";
+import {TextualResponse} from "./TextualResponse";
 import axios from "axios";
 import {useInterval} from "../support/useInterval";
 
@@ -21,7 +22,29 @@ function getOpponentNamesArray(response) {
   return array;
 }
 
+const useStyles = makeStyles((theme) => ({
+  container: {
+    display: "inline-block",
+    flexWrap: "wrap"
+  },
+  textField: {
+    marginRight: theme.spacing(1)
+  },
+  label: {
+    "&$disabled": {
+      color: "black"
+    }
+  },
+  inputRoot: {
+    "&$disabled": {
+      color: "red"
+    }
+  },
+  disabled: {}
+}));
+
 export const RockPaperScissorsWindow = () => {
+  const classes = useStyles();
   const [stage, setStage] = useState('introAndDisplayRegistration')
   const [playerName, setPlayerName] = useState('')
   const [opponentNames, setOpponentNames] = useState([])
@@ -102,7 +125,7 @@ export const RockPaperScissorsWindow = () => {
     }, (error) => {
       console.warn(error)
       setFormError(true)
-      setInputHelperText("Try something else")
+      setInputHelperText("Try something else. Maybe you are already registered?")
     })
   }
 
@@ -159,8 +182,10 @@ export const RockPaperScissorsWindow = () => {
             case 'introAndDisplayRegistration':
               return (
                   <Container maxWidth="xl">
-                    <DynamicResponse
-                        displayText={"Hi there! Challenge someone to a game of Rock Paper Scissors!"}/>
+                    <TextualResponse
+                        displayText={"Hi there!"}/>
+                    <TextualResponse
+                        displayText={"Challenge someone to a game of Rock Paper Scissors!"}/>
                     <Action description={"Start here!"}
                             onActionRun={() => {
                               resetStates()
@@ -172,6 +197,7 @@ export const RockPaperScissorsWindow = () => {
               return (
                   <Container maxWidth="xl">
                     <TextField label={"Play as"}
+                               className={classes.container}
                                error={formError}
                                variant="outlined"
                                helperText={inputHelperText}
@@ -203,9 +229,9 @@ export const RockPaperScissorsWindow = () => {
             case 'displayWelcomeAndDisplayStartGame':
               return (
                   <Container maxWidth="xl">
-                    <DynamicResponse
+                    <TextualResponse
                         displayText={"Welcome " + playerName + "!"}/>
-                    <DynamicResponse
+                    <TextualResponse
                         displayText={"Generate an invite or enter a joining code."}/>
                     <TextField label={"Joining Code"}
                                error={formError}
@@ -239,9 +265,9 @@ export const RockPaperScissorsWindow = () => {
             case 'showInvitationAndPollForNextPlayer':
               return (
                   <Container maxWidth="xl">
-                    <DynamicResponse
+                    <TextualResponse
                         displayText={"Hey " + playerName + "!"}/>
-                    <DynamicResponse
+                    <TextualResponse
                         displayText={"Share this code with your opponent: "
                         + sessionCode}/>
                     <Action description={"Start Over"}
@@ -252,12 +278,12 @@ export const RockPaperScissorsWindow = () => {
             case 'joinGameAndPollForBothPlayersReady':
               return (
                   <Container maxWidth="xl">
-                    <DynamicResponse
+                    <TextualResponse
                         displayText={"Hey " + playerName + "! Are you ready?"}/>
-                    <DynamicResponse
+                    <TextualResponse
                         displayText={opponentNames[0] + " VS "
                         + opponentNames[1]}/>
-                    <DynamicResponse
+                    <TextualResponse
                         displayText={"ROCK! PAPER! SCISSORS!"}/>
                     <Table>
                       <TableBody>
@@ -280,9 +306,9 @@ export const RockPaperScissorsWindow = () => {
             case 'showMovesAndWait':
               return (
                   <Container maxWidth="xl">
-                    <DynamicResponse
+                    <TextualResponse
                         displayText={"Come on " + playerName + "!"}/>
-                    <DynamicResponse
+                    <TextualResponse
                         displayText={"ROCK! PAPER! SCISSORS!"}/>
                     <Table>
                       <TableBody>
@@ -315,16 +341,16 @@ export const RockPaperScissorsWindow = () => {
             case 'pollResult':
               return (
                   <Container maxWidth="xl">
-                    <DynamicResponse
+                    <TextualResponse
                         displayText={"Polling Response"}/>
                   </Container>
               )
             case 'showWinner':
               return (
                   <Container maxWidth="xl">
-                    <DynamicResponse
+                    <TextualResponse
                         displayText={"Hey " + playerName+"! You played " + lastMove + "!"}/>
-                    <DynamicResponse
+                    <TextualResponse
                         displayText={winner + " has won the game"}/>
                     <Action description={"Play Again"}
                             onActionRun={() => handleChangeStage(

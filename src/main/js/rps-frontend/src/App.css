@@ -4,7 +4,7 @@
 
 .App-header {
   text-align: center;
-  background-color: #ffffff;
+  background-color: #E2D1F9;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -16,7 +16,7 @@
 
 .App-body {
   text-align: center;
-  background-color: #ab03f8;
+  background-color: #CCF381;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -24,7 +24,7 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-  color: white;
+  color: #317773;
 }
 
 .App-link {
