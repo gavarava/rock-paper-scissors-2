@@ -11,4 +11,5 @@
   <include file="changelogs/20210104_initial_tables.xml" relativeToChangelogFile="true"/>
   <include file="changelogs/20210711_sessions.xml" relativeToChangelogFile="true"/>
   <include file="changelogs/20210713_moves.xml" relativeToChangelogFile="true"/>
+  <include file="changelogs/20220305_alter_session_player_mapping.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>
