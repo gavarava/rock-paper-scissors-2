@@ -342,7 +342,7 @@ export const RockPaperScissorsWindow = () => {
               return (
                   <Container maxWidth="xl">
                     <TextualResponse
-                        displayText={"Polling Response"}/>
+                        displayText={"Waiting for your opponent"}/>
                   </Container>
               )
             case 'showWinner':
